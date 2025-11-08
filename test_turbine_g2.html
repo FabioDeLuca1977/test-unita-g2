@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Unità G2 - TURBINE IDRAULICHE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #11998e;
+        }
+
+        .header h1 {
+            color: #11998e;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #38ef7d;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #11998e;
+        }
+
+        .section-title {
+            color: #0d7a6e;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #11998e;
+            background: #e8f8f5;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tf-button {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .tf-button:hover {
+            border-color: #11998e;
+            background: #e8f8f5;
+        }
+
+        .tf-button.selected {
+            background: #11998e;
+            color: white;
+            border-color: #11998e;
+        }
+
+        .sortable-list {
+            min-height: 50px;
+        }
+
+        .sortable-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sortable-item:hover {
+            border-color: #11998e;
+            box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+        }
+
+        .sortable-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drag-handle {
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .instruction {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-style: italic;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #11998e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧭 TEST UNITÀ G2 – SEZIONE 3</h1>
+            <div class="subtitle">💧 TURBINE IDRAULICHE</div>
+        </div>
+
+        <!-- PARTE 1: SCELTA MULTIPLA -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 1 – Scelta multipla (una sola risposta corretta)</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Le turbine idrauliche sono:</div>
+                <label class="option">
+                    <input type="radio" name="q1" value="a">
+                    Macchine motrici di grande potenza installate nelle centrali idroelettriche
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="b">
+                    Macchine operatrici che sollevano acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="c">
+                    Piccoli motori a vapore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="d">
+                    Pompe per l'irrigazione
+                </label>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Lo scopo principale di una turbina idraulica è:</div>
+                <label class="option">
+                    <input type="radio" name="q2" value="a">
+                    Tenere in rotazione gli alternatori per produrre energia elettrica
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="b">
+                    Muovere il pistone di un motore a scoppio
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="c">
+                    Azionare le vele di un mulino
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="d">
+                    Regolare la pressione del vapore
+                </label>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Tutte le turbine hanno in comune:</div>
+                <label class="option">
+                    <input type="radio" name="q3" value="a">
+                    Distributore, ugello e girante
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="b">
+                    Cilindro, stantuffo e biella
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="c">
+                    Volano, albero motore e chiusa
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="d">
+                    Ruota, pala e timone
+                </label>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ L'ugello serve a:</div>
+                <label class="option">
+                    <input type="radio" name="q4" value="a">
+                    Far uscire l'acqua ad alta velocità riducendo la sezione del tubo
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="b">
+                    Far entrare aria nel tubo
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="c">
+                    Bloccare il flusso d'acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="d">
+                    Sollevare il livello dell'acqua
+                </label>
+                <div class="feedback" id="feedback-q4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ La girante è:</div>
+                <label class="option">
+                    <input type="radio" name="q5" value="a">
+                    Una ruota con pale messa in rotazione dal getto d'acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="b">
+                    Un condotto fisso per l'acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="c">
+                    Una valvola di sicurezza
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="d">
+                    Una caldaia di alimentazione
+                </label>
+                <div class="feedback" id="feedback-q5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 2: VERO O FALSO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 2 – Vero o Falso</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Le turbine idrauliche vengono usate nelle centrali idroelettriche.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf1', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf1', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf1" value="">
+                <div class="feedback" id="feedback-tf1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Quando si riduce la sezione del tubo, la velocità dell'acqua diminuisce.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf2', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf2', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf2" value="">
+                <div class="feedback" id="feedback-tf2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il distributore è un tubo fisso in cui scorre acqua ad alta pressione.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf3', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf3', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf3" value="">
+                <div class="feedback" id="feedback-tf3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Tutte le turbine funzionano immerse nell'acqua.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf4', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf4', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf4" value="">
+                <div class="feedback" id="feedback-tf4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ L'ugello è la parte mobile della turbina.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf5', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf5', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf5" value="">
+                <div class="feedback" id="feedback-tf5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 3: ASSOCIAZIONI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 3 – Associazioni</div>
+            <div class="instruction">Collega ogni tipo di turbina alla sua caratteristica principale</div>
+            
+            <div class="question">
+                <div class="question-text">Turbina Pelton →</div>
+                <select id="match1">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="pelton">🚿 Per grandi dislivelli (fino a 2000 m); unica non immersa, con cucchiai</option>
+                    <option value="francis">⚙️ Per dislivelli intermedi (30–400 m); pale svergolate ad anello</option>
+                    <option value="kaplan">🌀 Per piccoli dislivelli (3–30 m); pale orientabili a elica</option>
+                </select>
+                <div class="feedback" id="feedback-match1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Turbina Francis →</div>
+                <select id="match2">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="pelton">🚿 Per grandi dislivelli (fino a 2000 m); unica non immersa, con cucchiai</option>
+                    <option value="francis">⚙️ Per dislivelli intermedi (30–400 m); pale svergolate ad anello</option>
+                    <option value="kaplan">🌀 Per piccoli dislivelli (3–30 m); pale orientabili a elica</option>
+                </select>
+                <div class="feedback" id="feedback-match2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Turbina Kaplan →</div>
+                <select id="match3">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="pelton">🚿 Per grandi dislivelli (fino a 2000 m); unica non immersa, con cucchiai</option>
+                    <option value="francis">⚙️ Per dislivelli intermedi (30–400 m); pale svergolate ad anello</option>
+                    <option value="kaplan">🌀 Per piccoli dislivelli (3–30 m); pale orientabili a elica</option>
+                </select>
+                <div class="feedback" id="feedback-match3"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 4: METTI IN ORDINE -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
+            <div class="instruction">Ordina il percorso dell'acqua in una turbina idraulica. Trascina gli elementi per riordinarli.</div>
+            
+            <div class="question">
+                <div class="sortable-list" id="sortable">
+                    <div class="sortable-item" draggable="true" data-id="1">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Colpisce la girante e la mette in rotazione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="2">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>L'acqua entra nel distributore ad alta pressione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="3">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>L'acqua esce attraverso il condotto di scarico</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="4">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Passa attraverso l'ugello e aumenta la velocità</span>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-order"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 5: SCELTA MULTIPLA SPECIFICA -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 5 – Scelta multipla specifica per ciascun tipo</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ La turbina Pelton si usa per:</div>
+                <label class="option">
+                    <input type="radio" name="q6" value="a">
+                    Grandi dislivelli, fino a circa 2000 m
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="b">
+                    Dislivelli medi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="c">
+                    Dislivelli minimi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="d">
+                    Portate molto basse senza salto
+                </label>
+                <div class="feedback" id="feedback-q6"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ La turbina Francis è adatta per:</div>
+                <label class="option">
+                    <input type="radio" name="q7" value="a">
+                    Dislivelli intermedi, da 30 a 400 m
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="b">
+                    Dislivelli minimi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="c">
+                    Grandi dislivelli oltre 2000 m
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="d">
+                    Funzionamento non immerso
+                </label>
+                <div class="feedback" id="feedback-q7"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ La turbina Kaplan ha:</div>
+                <label class="option">
+                    <input type="radio" name="q8" value="a">
+                    Una ruota a elica con pale orientabili, per dislivelli da 3 a 30 m
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="b">
+                    Una ruota a cucchiai
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="c">
+                    Pale fisse ad anello
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="d">
+                    Ugelli fissi e non orientabili
+                </label>
+                <div class="feedback" id="feedback-q8"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ La turbina Pelton funziona:</div>
+                <label class="option">
+                    <input type="radio" name="q9" value="a">
+                    Non immersa nell'acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="b">
+                    Completamente immersa
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="c">
+                    Solo in condotti verticali
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="d">
+                    Con pale svergolate
+                </label>
+                <div class="feedback" id="feedback-q9"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Nella turbina Kaplan, le pale orientabili servono a:</div>
+                <label class="option">
+                    <input type="radio" name="q10" value="a">
+                    Mantenere alto il rendimento anche se varia la portata dell'acqua
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="b">
+                    Ridurre la velocità del flusso
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="c">
+                    Aumentare la pressione nel distributore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="d">
+                    Fermare la girante
+                </label>
+                <div class="feedback" id="feedback-q10"></div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="checkAnswers()">📝 VERIFICA RISPOSTE</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Risposte corrette
+        const correctAnswers = {
+            q1: 'a',
+            q2: 'a',
+            q3: 'a',
+            q4: 'a',
+            q5: 'a',
+            tf1: 'vero',
+            tf2: 'falso',
+            tf3: 'vero',
+            tf4: 'falso',
+            tf5: 'falso',
+            match1: 'pelton',
+            match2: 'francis',
+            match3: 'kaplan',
+            order: ['L\'acqua entra nel distributore ad alta pressione', 'Passa attraverso l\'ugello e aumenta la velocità', 'Colpisce la girante e la mette in rotazione', 'L\'acqua esce attraverso il condotto di scarico'],
+            q6: 'a',
+            q7: 'a',
+            q8: 'a',
+            q9: 'a',
+            q10: 'a'
+        };
+
+        // Gestione Vero/Falso
+        function selectTF(id, value) {
+            document.getElementById(id).value = value;
+            const buttons = event.target.parentElement.querySelectorAll('.tf-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        // Gestione Drag & Drop per ordinamento
+        let draggedElement = null;
+
+        const sortableList = document.getElementById('sortable');
+        const sortableItems = sortableList.querySelectorAll('.sortable-item');
+
+        sortableItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                setTimeout(() => this.classList.add('dragging'), 0);
+            });
+
+            item.addEventListener('dragend', function() {
+                setTimeout(() => this.classList.remove('dragging'), 0);
+                draggedElement = null;
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(sortableList, e.clientY);
+                if (afterElement == null) {
+                    sortableList.appendChild(draggedElement);
+                } else {
+                    sortableList.insertBefore(draggedElement, afterElement);
+                }
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Funzione di verifica
+        function checkAnswers() {
+            let score = 0;
+            let total = 22; // Totale domande
+
+            // Verifica scelta multipla (Parte 1 e 5)
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                
+                if (selected) {
+                    if (selected.value === correctAnswers[`q${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica Vero/Falso
+            for (let i = 1; i <= 5; i++) {
+                const answer = document.getElementById(`tf${i}`).value;
+                const feedback = document.getElementById(`feedback-tf${i}`);
+                
+                if (answer) {
+                    if (answer === correctAnswers[`tf${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica associazioni
+            for (let i = 1; i <= 3; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                const feedback = document.getElementById(`feedback-match${i}`);
+                
+                if (selected) {
+                    if (selected === correctAnswers[`match${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica ordine
+            const sortedItems = Array.from(sortableList.children).map(item => 
+                item.querySelector('span:last-child').textContent
+            );
+            const feedback = document.getElementById('feedback-order');
+            
+            let orderCorrect = true;
+            for (let i = 0; i < sortedItems.length; i++) {
+                if (sortedItems[i] !== correctAnswers.order[i]) {
+                    orderCorrect = false;
+                    break;
+                }
+            }
+            
+            if (orderCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✅ Ordine corretto!';
+                feedback.style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = '❌ Ordine errato. Ordine corretto: Distributore → Ugello → Girante → Scarico';
+                feedback.style.display = 'block';
+            }
+
+            // Mostra risultato
+            const percentage = ((score / total) * 100).toFixed(1);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                🎯 Punteggio: ${score}/${total} (${percentage}%)
+                <br>
+                ${percentage >= 90 ? '🏆 Eccellente!' : 
+                  percentage >= 75 ? '👍 Buono!' : 
+                  percentage >= 60 ? '📚 Sufficiente' : 
+                  '📖 Da ripassare'}
+            `;
+            resultDiv.style.display = 'block';
+            
+            // Scroll al risultato
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>
