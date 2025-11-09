@@ -127,37 +127,6 @@
             border-color: #f093fb;
         }
 
-        .sortable-list {
-            min-height: 50px;
-        }
-
-        .sortable-item {
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: move;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sortable-item:hover {
-            border-color: #f093fb;
-            box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
-        }
-
-        .sortable-item.dragging {
-            opacity: 0.5;
-        }
-
-        .drag-handle {
-            font-size: 1.2em;
-            color: #999;
-        }
-
         .submit-btn {
             width: 100%;
             padding: 18px;
@@ -175,6 +144,23 @@
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+        }
+
+        .verify-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
         }
 
         .result {
@@ -202,13 +188,21 @@
             background: #d4edda;
             color: #155724;
             border: 2px solid #c3e6cb;
+            display: block;
         }
 
         .feedback.incorrect {
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
             background: #f8d7da;
             color: #721c24;
             border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 0.95em;
+            font-weight: normal;
+            line-height: 1.5;
         }
 
         .instruction {
@@ -243,6 +237,76 @@
             padding: 10px;
             background: #fff5f8;
             border-radius: 8px;
+        }
+
+        .order-list {
+            padding: 0;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            gap: 10px;
+        }
+
+        .order-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .arrow-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #f093fb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .arrow-btn:hover {
+            background: #f093fb;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .arrow-btn:active {
+            transform: scale(0.95);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .order-text {
+            flex: 1;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+
+        .order-number {
+            background: #f093fb;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
         }
     </style>
 </head>
@@ -530,48 +594,48 @@
             
             <div class="question">
                 <div class="question-text">Aspirazione →</div>
-                <select id="match1">
+                <select id="match1" onchange="checkMatch('match1')">
                     <option value="">-- Seleziona la descrizione --</option>
                     <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
                     <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
                     <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
-                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di scarico</option>
                 </select>
                 <div class="feedback" id="feedback-match1"></div>
             </div>
 
             <div class="question">
                 <div class="question-text">Compressione →</div>
-                <select id="match2">
+                <select id="match2" onchange="checkMatch('match2')">
                     <option value="">-- Seleziona la descrizione --</option>
                     <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
                     <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
                     <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
-                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di scarico</option>
                 </select>
                 <div class="feedback" id="feedback-match2"></div>
             </div>
 
             <div class="question">
                 <div class="question-text">Espansione →</div>
-                <select id="match3">
+                <select id="match3" onchange="checkMatch('match3')">
                     <option value="">-- Seleziona la descrizione --</option>
                     <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
                     <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
                     <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
-                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di scarico</option>
                 </select>
                 <div class="feedback" id="feedback-match3"></div>
             </div>
 
             <div class="question">
                 <div class="question-text">Scarico →</div>
-                <select id="match4">
+                <select id="match4" onchange="checkMatch('match4')">
                     <option value="">-- Seleziona la descrizione --</option>
                     <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
                     <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
                     <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
-                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di scarico</option>
                 </select>
                 <div class="feedback" id="feedback-match4"></div>
             </div>
@@ -582,53 +646,21 @@
             <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
             
             <div class="subsection-title">Ciclo Otto (motore a benzina)</div>
-            <div class="instruction">Ordina i tempi del motore a benzina a quattro tempi. Trascina gli elementi per riordinarli.</div>
+            <div class="instruction">💡 Usa le frecce ↑ ↓ per ordinare i tempi del motore a benzina a quattro tempi</div>
             
             <div class="question">
-                <div class="sortable-list" id="sortable-otto">
-                    <div class="sortable-item" draggable="true" data-id="1">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Scarico</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="2">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Compressione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="3">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Aspirazione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="4">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Espansione</span>
-                    </div>
-                </div>
+                <div class="order-list" id="orderListOtto"></div>
                 <div class="feedback" id="feedback-order-otto"></div>
+                <button class="verify-btn" onclick="checkOrderOtto()">✓ Verifica Ordine</button>
             </div>
 
             <div class="subsection-title">Ciclo Diesel (motore a gasolio)</div>
-            <div class="instruction">Ordina i tempi del motore Diesel a quattro tempi. Trascina gli elementi per riordinarli.</div>
+            <div class="instruction">💡 Usa le frecce ↑ ↓ per ordinare i tempi del motore Diesel a quattro tempi</div>
             
             <div class="question">
-                <div class="sortable-list" id="sortable-diesel">
-                    <div class="sortable-item" draggable="true" data-id="1">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Espansione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="2">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Scarico</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="3">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Compressione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="4">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Aspirazione</span>
-                    </div>
-                </div>
+                <div class="order-list" id="orderListDiesel"></div>
                 <div class="feedback" id="feedback-order-diesel"></div>
+                <button class="verify-btn" onclick="checkOrderDiesel()">✓ Verifica Ordine</button>
             </div>
         </div>
 
@@ -791,7 +823,7 @@
             
             <div class="question">
                 <div class="question-text">Motore a ciclo Otto →</div>
-                <select id="match5">
+                <select id="match5" onchange="checkMatch('match5')">
                     <option value="">-- Seleziona la caratteristica --</option>
                     <option value="otto">⚡ Usa benzina e candela di accensione</option>
                     <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
@@ -802,7 +834,7 @@
 
             <div class="question">
                 <div class="question-text">Motore a ciclo Diesel →</div>
-                <select id="match6">
+                <select id="match6" onchange="checkMatch('match6')">
                     <option value="">-- Seleziona la caratteristica --</option>
                     <option value="otto">⚡ Usa benzina e candela di accensione</option>
                     <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
@@ -813,7 +845,7 @@
 
             <div class="question">
                 <div class="question-text">Motore a due tempi →</div>
-                <select id="match7">
+                <select id="match7" onchange="checkMatch('match7')">
                     <option value="">-- Seleziona la caratteristica --</option>
                     <option value="otto">⚡ Usa benzina e candela di accensione</option>
                     <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
@@ -829,186 +861,402 @@
     </div>
 
     <script>
-        // Risposte corrette
+        // Risposte corrette con spiegazioni
         const correctAnswers = {
-            q1: 'a', q2: 'a', q3: 'a', q4: 'a', q5: 'a',
-            q6: 'a', q7: 'a', q8: 'a', q9: 'a', q10: 'a',
-            tf1: 'falso', tf2: 'vero', tf3: 'falso', tf4: 'vero', tf5: 'vero',
-            match1: 'aspirazione',
-            match2: 'compressione',
-            match3: 'espansione',
-            match4: 'scarico',
-            orderOtto: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
-            orderDiesel: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
-            q11: 'a', q12: 'a', q13: 'a', q14: 'a', q15: 'a', q16: 'a', q17: 'a',
-            match5: 'otto',
-            match6: 'diesel',
-            match7: 'duetempi'
+            q1: {
+                answer: 'a',
+                explanation: 'Il motore a scoppio è molto più leggero del motore a vapore perché non necessita di una pesante caldaia esterna. La combustione avviene direttamente all\'interno dei cilindri (combustione interna), eliminando la necessità di riscaldare esternamente il fluido di lavoro.'
+            },
+            q2: {
+                answer: 'a',
+                explanation: 'Nel motore a scoppio la combustione avviene all\'interno del cilindro stesso. Questo è il motivo per cui viene chiamato "motore a combustione interna", a differenza del motore a vapore dove la combustione avviene esternamente nella caldaia.'
+            },
+            q3: {
+                answer: 'a',
+                explanation: 'Lo scoppio (combustione rapida) del carburante produce gas ad altissima temperatura e pressione che si espandono violentemente, spingendo con forza il pistone verso il basso e producendo così il lavoro meccanico.'
+            },
+            q4: {
+                answer: 'a',
+                explanation: 'Il motore a benzina a quattro tempi è chiamato "motore a ciclo Otto" dal nome dell\'inventore tedesco Nikolaus Otto che lo brevettò nel 1876. Questo motore utilizza la candela di accensione per innescare la combustione.'
+            },
+            q5: {
+                answer: 'a',
+                explanation: 'Il motore a gasolio a quattro tempi è chiamato "motore a ciclo Diesel" dal nome dell\'ingegnere tedesco Rudolf Diesel che lo inventò nel 1892. A differenza del ciclo Otto, non usa la candela ma l\'accensione per compressione.'
+            },
+            q6: {
+                answer: 'a',
+                explanation: 'Durante la fase di aspirazione, il pistone scende dal punto morto superiore a quello inferiore. La valvola di aspirazione si apre e il movimento del pistone crea una depressione che fa entrare nel cilindro la miscela di aria e benzina nebulizzata proveniente dal carburatore.'
+            },
+            q7: {
+                answer: 'a',
+                explanation: 'Durante la fase di espansione (detta anche fase attiva o di scoppio), quando il pistone è al punto morto superiore e la miscela è completamente compressa, scocca la scintilla della candela che innesca la combustione. I gas ad alta pressione si espandono e spingono con forza il pistone verso il basso, producendo il lavoro utile.'
+            },
+            q8: {
+                answer: 'a',
+                explanation: 'Nel motore Diesel non c\'è la candela di accensione. Durante la compressione, l\'aria viene compressa a pressioni così elevate (circa 40-50 atmosfere) che la sua temperatura sale a 700-800 °C. Quando il gasolio viene iniettato in questa aria caldissima, si incendia spontaneamente per auto-accensione.'
+            },
+            q9: {
+                answer: 'a',
+                explanation: 'Il motore Diesel non ha la candela di accensione perché non ne ha bisogno. L\'accensione del gasolio avviene per auto-combustione grazie all\'altissima temperatura raggiunta dall\'aria durante la compressione. Ha invece un iniettore per spruzzare il gasolio nell\'aria compressa e calda.'
+            },
+            q10: {
+                answer: 'a',
+                explanation: 'Il motore Diesel è preferito per i veicoli pesanti e commerciali (camion, autobus, trattori, macchine agricole, navi) perché è più robusto, consuma meno carburante ed eroga più coppia (forza) a bassi regimi, caratteristiche ideali per spostare carichi pesanti.'
+            },
+            tf1: {
+                answer: 'falso',
+                explanation: 'No! Nel motore a benzina (ciclo Otto) la miscela è composta da aria e BENZINA nebulizzata, non gasolio. Il gasolio invece è usato nel motore Diesel. Sono due carburanti diversi per due tipi di motore differenti.'
+            },
+            tf2: {
+                answer: 'vero',
+                explanation: 'Corretto! Nel motore a scoppio la combustione avviene all\'INTERNO del cilindro, per questo si chiama motore a combustione interna. A differenza del motore a vapore dove la combustione è esterna (nella caldaia), qui il carburante brucia direttamente nella camera di scoppio.'
+            },
+            tf3: {
+                answer: 'falso',
+                explanation: 'No, è il contrario! Il motore Diesel consuma MENO del motore a benzina. Il Diesel ha un rendimento termodinamico migliore (circa 40% contro il 25-30% del benzina) grazie al maggior rapporto di compressione, quindi trasforma meglio il carburante in lavoro meccanico.'
+            },
+            tf4: {
+                answer: 'vero',
+                explanation: 'Esatto! Durante la fase di compressione ENTRAMBE le valvole (aspirazione e scarico) sono chiuse per permettere al pistone di comprimere efficacemente la miscela o l\'aria nel cilindro, aumentandone pressione e temperatura.'
+            },
+            tf5: {
+                answer: 'vero',
+                explanation: 'Corretto! La fase di espansione (o scoppio) è l\'UNICA fase attiva, cioè quella che produce lavoro utile. È durante questa fase che i gas in combustione si espandono spingendo il pistone verso il basso e facendo girare l\'albero motore. Le altre tre fasi (aspirazione, compressione e scarico) sono passive e consumano energia.'
+            },
+            match1: {
+                answer: 'aspirazione',
+                explanation: 'Nella fase di aspirazione, il pistone scende creando una depressione che fa entrare nel cilindro: nel motore Otto entra la miscela di aria e benzina dal carburatore; nel motore Diesel entra solo aria pura.'
+            },
+            match2: {
+                answer: 'compressione',
+                explanation: 'Nella fase di compressione, il pistone risale con entrambe le valvole chiuse e comprime fortemente: nel motore Otto comprime la miscela aria-benzina portandola a circa 10-12 atmosfere; nel Diesel comprime solo l\'aria portandola a 40-50 atmosfere e 700-800 °C.'
+            },
+            match3: {
+                answer: 'espansione',
+                explanation: 'Nella fase di espansione avviene la combustione: nel motore Otto la candela fa scoccare la scintilla che accende la miscela; nel Diesel viene iniettato il gasolio che si auto-incendia a contatto con l\'aria caldissima. I gas combusti si espandono e spingono il pistone verso il basso producendo lavoro.'
+            },
+            match4: {
+                answer: 'scarico',
+                explanation: 'Nella fase di scarico, la valvola di scarico si apre e il pistone risale espellendo i gas combusti (prodotti della combustione) fuori dal cilindro attraverso il sistema di scarico.'
+            },
+            orderOtto: {
+                answer: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
+                explanation: 'Questo è l\'ordine corretto delle quattro fasi del ciclo Otto: 1) Aspirazione (entra miscela aria-benzina), 2) Compressione (il pistone comprime la miscela), 3) Espansione (la candela fa scoppiare la miscela che spinge il pistone), 4) Scarico (escono i gas combusti).'
+            },
+            orderDiesel: {
+                answer: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
+                explanation: 'Il ciclo Diesel ha le stesse quattro fasi del ciclo Otto, nello stesso ordine: 1) Aspirazione (entra solo aria), 2) Compressione (l\'aria viene compressa fortemente fino a 700-800°C), 3) Espansione (viene iniettato il gasolio che si auto-accende e spinge il pistone), 4) Scarico (escono i gas combusti).'
+            },
+            q11: {
+                answer: 'a',
+                explanation: 'Il motore a due tempi funziona con una miscela pre-miscelata di benzina e olio lubrificante (circa 2-3% di olio). L\'olio è necessario perché in questo tipo di motore non c\'è un sistema di lubrificazione separato come nel quattro tempi: l\'olio nella miscela lubrifica le parti interne mentre brucia insieme alla benzina.'
+            },
+            q12: {
+                answer: 'a',
+                explanation: 'Nel motore a due tempi non ci sono valvole comandate. Al loro posto ci sono delle "luci" (aperture) praticate nel cilindro che vengono aperte e chiuse automaticamente dal movimento del pistone stesso: quando il pistone scende scopre le luci, quando sale le copre.'
+            },
+            q13: {
+                answer: 'a',
+                explanation: 'Il motore a due tempi non ha le valvole di aspirazione e scarico comandate tipiche del quattro tempi. Ha invece un sistema più semplice con luci (feritoie) sul cilindro che vengono aperte e chiuse dal movimento del pistone, rendendo la costruzione più semplice ed economica.'
+            },
+            q14: {
+                answer: 'a',
+                explanation: 'Durante il primo tempo (scoppio e scarico), la candela fa scoccare la scintilla quando il pistone è in alto, la miscela esplode e i gas ad alta pressione spingono il pistone verso il basso. Scendendo, il pistone scopre la luce di scarico e i gas combusti iniziano ad uscire.'
+            },
+            q15: {
+                answer: 'a',
+                explanation: 'Durante il secondo tempo (aspirazione e compressione), mentre il pistone risale dopo lo scoppio, la miscela fresca entra nella camera di scoppio attraverso la luce di aspirazione (che si apre quando il pistone è in basso). Continuando a salire, il pistone chiude le luci e comprime la miscela preparandola per il prossimo scoppio.'
+            },
+            q16: {
+                answer: 'a',
+                explanation: 'Il motore a due tempi era molto diffuso nei ciclomotori da 50 cc (Vespa, Ciao, Garelli, etc.) perché è più semplice, leggero ed economico del quattro tempi. Era perfetto per questi piccoli veicoli dove semplicità e leggerezza erano fondamentali.'
+            },
+            q17: {
+                answer: 'a',
+                explanation: 'Oggi il motore a due tempi è quasi scomparso perché inquina molto di più del quattro tempi. Bruciando l\'olio lubrificante insieme alla benzina, produce molti più idrocarburi incombusti e fumo. Le severe normative ambientali moderne (Euro 5, Euro 6) hanno reso praticamente impossibile l\'uso dei due tempi nei veicoli stradali.'
+            },
+            match5: {
+                answer: 'otto',
+                explanation: 'Il motore a ciclo Otto (a benzina) usa benzina come carburante e la candela di accensione per innescare la combustione della miscela compressa. L\'accensione avviene tramite una scintilla elettrica prodotta dalla candela al momento giusto.'
+            },
+            match6: {
+                answer: 'diesel',
+                explanation: 'Il motore a ciclo Diesel usa gasolio come carburante e non ha candela di accensione. L\'accensione avviene per auto-combustione: l\'aria viene compressa così tanto da raggiungere 700-800°C, e quando il gasolio viene iniettato si incendia spontaneamente a contatto con questa aria caldissima.'
+            },
+            match7: {
+                answer: 'duetempi',
+                explanation: 'Il motore a due tempi usa una miscela pre-miscelata di benzina e olio lubrificante. Non ha valvole comandate ma luci sul cilindro che vengono aperte e chiuse dal movimento stesso del pistone, rendendo la costruzione più semplice.'
+            }
         };
 
+        let score = 0;
+        let answeredQuestions = new Set();
 
-            // Verifica scelta multipla (Parte 1 e 5)
-            for (let i = 1; i <= 17; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                const feedback = document.getElementById(`feedback-q${i}`);
-                
-                if (selected) {
-                    if (selected.value === correctAnswers[`q${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica Vero/Falso
-            for (let i = 1; i <= 5; i++) {
-                const answer = document.getElementById(`tf${i}`).value;
-                const feedback = document.getElementById(`feedback-tf${i}`);
-                
-                if (answer) {
-                    if (answer === correctAnswers[`tf${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica associazioni fasi
-            for (let i = 1; i <= 4; i++) {
-                const selected = document.getElementById(`match${i}`).value;
-                const feedback = document.getElementById(`feedback-match${i}`);
-                
-                if (selected) {
-                    if (selected === correctAnswers[`match${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica ordine Otto
-            const sortedItemsOtto = Array.from(document.getElementById('sortable-otto').children).map(item => 
-                item.querySelector('span:last-child').textContent
-            );
-            const feedbackOtto = document.getElementById('feedback-order-otto');
+        // Funzione per verificare domande a scelta multipla
+        function checkQuestion(questionId) {
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedback = document.getElementById(`feedback-${questionId}`);
             
-            let orderOttoCorrect = true;
-            for (let i = 0; i < sortedItemsOtto.length; i++) {
-                if (sortedItemsOtto[i] !== correctAnswers.orderOtto[i]) {
-                    orderOttoCorrect = false;
+            if (!selected) return;
+            
+            const isCorrect = selected.value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Gestione Vero/Falso con feedback immediato
+        function selectTF(id, value) {
+            document.getElementById(id).value = value;
+            const buttons = event.target.parentElement.querySelectorAll('.tf-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Verifica immediata
+            const questionId = id;
+            const feedback = document.getElementById(`feedback-${questionId}`);
+            const isCorrect = value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Verifica associazioni con feedback immediato
+        function checkMatch(matchId) {
+            const selected = document.getElementById(matchId).value;
+            const feedback = document.getElementById(`feedback-${matchId}`);
+            
+            if (!selected) {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '⚠️ <strong>Nessuna risposta selezionata</strong>';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            const isCorrect = selected === correctAnswers[matchId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    score++;
+                    answeredQuestions.add(matchId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    answeredQuestions.add(matchId);
+                }
+            }
+        }
+
+        // ========================================
+        // SISTEMA ORDINAMENTO CON FRECCE - OTTO
+        // ========================================
+        
+        let orderItemsOtto = [
+            'Scarico',
+            'Compressione',
+            'Aspirazione',
+            'Espansione'
+        ];
+        
+        function renderOrderListOtto() {
+            const list = document.getElementById('orderListOtto');
+            if (!list) return;
+            
+            list.innerHTML = orderItemsOtto.map((item, index) => `
+                <div class="order-item">
+                    <div class="order-number">${index + 1}</div>
+                    <div class="order-buttons">
+                        <button class="arrow-btn" onclick="moveUpOtto(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="arrow-btn" onclick="moveDownOtto(${index})" ${index === orderItemsOtto.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    <div class="order-text">${item}</div>
+                </div>
+            `).join('');
+        }
+        
+        function moveUpOtto(index) {
+            if (index > 0) {
+                [orderItemsOtto[index], orderItemsOtto[index - 1]] = [orderItemsOtto[index - 1], orderItemsOtto[index]];
+                renderOrderListOtto();
+            }
+        }
+        
+        function moveDownOtto(index) {
+            if (index < orderItemsOtto.length - 1) {
+                [orderItemsOtto[index], orderItemsOtto[index + 1]] = [orderItemsOtto[index + 1], orderItemsOtto[index]];
+                renderOrderListOtto();
+            }
+        }
+        
+        function checkOrderOtto() {
+            const fb = document.getElementById('feedback-order-otto');
+            const correctOrder = correctAnswers.orderOtto.answer;
+            let isCorrect = true;
+            
+            for (let i = 0; i < orderItemsOtto.length; i++) {
+                if (orderItemsOtto[i] !== correctOrder[i]) {
+                    isCorrect = false;
                     break;
                 }
             }
             
-            if (orderOttoCorrect) {
-                score++;
-                feedbackOtto.className = 'feedback correct';
-                feedbackOtto.textContent = '✅ Ordine corretto!';
-                feedbackOtto.style.display = 'block';
+            if (isCorrect) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = `✅ <strong>Ordine corretto!</strong><div class="explanation">${correctAnswers.orderOtto.explanation}</div>`;
+                if (!answeredQuestions.has('orderOtto')) {
+                    score++;
+                    answeredQuestions.add('orderOtto');
+                }
             } else {
-                feedbackOtto.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                feedbackOtto.textContent = '❌ Ordine errato. Ordine corretto: Aspirazione → Compressione → Espansione → Scarico';
-                feedbackOtto.style.display = 'block';
+                fb.className = 'feedback incorrect';
+                let orderDisplay = correctOrder.map((item, idx) => `${idx + 1}. ${item}`).join(' → ');
+                fb.innerHTML = `❌ <strong>Ordine errato</strong><div class="explanation"><strong>Ordine corretto:</strong> ${orderDisplay}<br><br>${correctAnswers.orderOtto.explanation}</div>`;
+                if (!answeredQuestions.has('orderOtto')) {
+                    answeredQuestions.add('orderOtto');
+                }
             }
+        }
 
-            // Verifica ordine Diesel
-            const sortedItemsDiesel = Array.from(document.getElementById('sortable-diesel').children).map(item => 
-                item.querySelector('span:last-child').textContent
-            );
-            const feedbackDiesel = document.getElementById('feedback-order-diesel');
+        // ========================================
+        // SISTEMA ORDINAMENTO CON FRECCE - DIESEL
+        // ========================================
+        
+        let orderItemsDiesel = [
+            'Espansione',
+            'Scarico',
+            'Compressione',
+            'Aspirazione'
+        ];
+        
+        function renderOrderListDiesel() {
+            const list = document.getElementById('orderListDiesel');
+            if (!list) return;
             
-            let orderDieselCorrect = true;
-            for (let i = 0; i < sortedItemsDiesel.length; i++) {
-                if (sortedItemsDiesel[i] !== correctAnswers.orderDiesel[i]) {
-                    orderDieselCorrect = false;
+            list.innerHTML = orderItemsDiesel.map((item, index) => `
+                <div class="order-item">
+                    <div class="order-number">${index + 1}</div>
+                    <div class="order-buttons">
+                        <button class="arrow-btn" onclick="moveUpDiesel(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="arrow-btn" onclick="moveDownDiesel(${index})" ${index === orderItemsDiesel.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    <div class="order-text">${item}</div>
+                </div>
+            `).join('');
+        }
+        
+        function moveUpDiesel(index) {
+            if (index > 0) {
+                [orderItemsDiesel[index], orderItemsDiesel[index - 1]] = [orderItemsDiesel[index - 1], orderItemsDiesel[index]];
+                renderOrderListDiesel();
+            }
+        }
+        
+        function moveDownDiesel(index) {
+            if (index < orderItemsDiesel.length - 1) {
+                [orderItemsDiesel[index], orderItemsDiesel[index + 1]] = [orderItemsDiesel[index + 1], orderItemsDiesel[index]];
+                renderOrderListDiesel();
+            }
+        }
+        
+        function checkOrderDiesel() {
+            const fb = document.getElementById('feedback-order-diesel');
+            const correctOrder = correctAnswers.orderDiesel.answer;
+            let isCorrect = true;
+            
+            for (let i = 0; i < orderItemsDiesel.length; i++) {
+                if (orderItemsDiesel[i] !== correctOrder[i]) {
+                    isCorrect = false;
                     break;
                 }
             }
             
-            if (orderDieselCorrect) {
-                score++;
-                feedbackDiesel.className = 'feedback correct';
-                feedbackDiesel.textContent = '✅ Ordine corretto!';
-                feedbackDiesel.style.display = 'block';
+            if (isCorrect) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = `✅ <strong>Ordine corretto!</strong><div class="explanation">${correctAnswers.orderDiesel.explanation}</div>`;
+                if (!answeredQuestions.has('orderDiesel')) {
+                    score++;
+                    answeredQuestions.add('orderDiesel');
+                }
             } else {
-                feedbackDiesel.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                feedbackDiesel.textContent = '❌ Ordine errato. Ordine corretto: Aspirazione → Compressione → Espansione → Scarico';
-                feedbackDiesel.style.display = 'block';
-            }
-
-            // Verifica associazioni tipologie
-            for (let i = 5; i <= 7; i++) {
-                const selected = document.getElementById(`match${i}`).value;
-                const feedback = document.getElementById(`feedback-match${i}`);
-                
-                if (selected) {
-                    if (selected === correctAnswers[`match${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
+                fb.className = 'feedback incorrect';
+                let orderDisplay = correctOrder.map((item, idx) => `${idx + 1}. ${item}`).join(' → ');
+                fb.innerHTML = `❌ <strong>Ordine errato</strong><div class="explanation"><strong>Ordine corretto:</strong> ${orderDisplay}<br><br>${correctAnswers.orderDiesel.explanation}</div>`;
+                if (!answeredQuestions.has('orderDiesel')) {
+                    answeredQuestions.add('orderDiesel');
                 }
             }
+        }
+        
+        // Inizializza le liste di ordinamento
+        if (document.getElementById('orderListOtto')) {
+            renderOrderListOtto();
+        }
+        if (document.getElementById('orderListDiesel')) {
+            renderOrderListDiesel();
+        }
 
-            // Mostra risultato
+        // Mostra punteggio finale
+        function showFinalScore() {
+            const total = 31; // 17 scelta multipla + 5 vero/falso + 7 associazioni + 2 ordini
             const percentage = ((score / total) * 100).toFixed(1);
             const resultDiv = document.getElementById('result');
+            
+            let emoji = '';
+            let message = '';
+            
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'Eccellente! Ottima conoscenza del motore a scoppio!';
+            } else if (percentage >= 75) {
+                emoji = '👍';
+                message = 'Buono! Continua così!';
+            } else if (percentage >= 60) {
+                emoji = '📚';
+                message = 'Sufficiente. Ripassa alcuni concetti.';
+            } else {
+                emoji = '📖';
+                message = 'Da ripassare. Studia ancora un po\'.';
+            }
+            
             resultDiv.innerHTML = `
-                🎯 Punteggio: ${score}/${total} (${percentage}%)
-                <br>
-                ${percentage >= 90 ? '🏆 Eccellente!' : 
-                  percentage >= 75 ? '👍 Buono!' : 
-                  percentage >= 60 ? '📚 Sufficiente' : 
-                  '📖 Da ripassare'}
+                ${emoji} <strong>PUNTEGGIO FINALE</strong><br>
+                <div style="font-size: 2em; margin: 15px 0;">${score}/${total}</div>
+                <div style="font-size: 1.5em;">${percentage}%</div>
+                <div style="font-size: 1em; margin-top: 10px; opacity: 0.95;">${message}</div>
             `;
             resultDiv.style.display = 'block';
             
