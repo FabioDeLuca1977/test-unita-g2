@@ -121,51 +121,6 @@
             border-color: #667eea;
         }
 
-        .match-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .match-item {
-            padding: 15px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-        }
-
-        .sortable-list {
-            min-height: 50px;
-        }
-
-        .sortable-item {
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: move;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sortable-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .sortable-item.dragging {
-            opacity: 0.5;
-        }
-
-        .drag-handle {
-            font-size: 1.2em;
-            color: #999;
-        }
-
         .verify-btn {
             padding: 12px 25px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -261,6 +216,7 @@
             cursor: pointer;
             width: 100%;
             background: white;
+            margin-top: 10px;
         }
 
         select:focus {
@@ -268,15 +224,6 @@
             border-color: #667eea;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            .match-container {
-                grid-template-columns: 1fr;
-            }
-        }
         .order-list { padding: 0; }
         .order-item { display: flex; align-items: center; padding: 15px; margin: 10px 0; background: white; border: 2px solid #e0e0e0; border-radius: 8px; gap: 10px; }
         .order-buttons { display: flex; flex-direction: column; gap: 5px; }
@@ -286,6 +233,12 @@
         .arrow-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #f5f5f5; }
         .order-text { flex: 1; font-weight: 500; font-size: 1.05em; }
         .order-number { background: #667eea; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -469,7 +422,7 @@
 
             <div class="question">
                 <div class="question-text">1️⃣ Mulino ad acqua →</div>
-                <select id="match1">
+                <select id="match1" onchange="checkMatch('match1')">
                     <option value="">Seleziona...</option>
                     <option value="acqua_corrente">Acqua corrente</option>
                     <option value="aria">Aria in movimento</option>
@@ -482,7 +435,7 @@
 
             <div class="question">
                 <div class="question-text">2️⃣ Mulino a vento →</div>
-                <select id="match2">
+                <select id="match2" onchange="checkMatch('match2')">
                     <option value="">Seleziona...</option>
                     <option value="acqua_corrente">Acqua corrente</option>
                     <option value="aria">Aria in movimento</option>
@@ -495,7 +448,7 @@
 
             <div class="question">
                 <div class="question-text">3️⃣ Motore a vapore →</div>
-                <select id="match3">
+                <select id="match3" onchange="checkMatch('match3')">
                     <option value="">Seleziona...</option>
                     <option value="acqua_corrente">Acqua corrente</option>
                     <option value="aria">Aria in movimento</option>
@@ -508,7 +461,7 @@
 
             <div class="question">
                 <div class="question-text">4️⃣ Motore a scoppio →</div>
-                <select id="match4">
+                <select id="match4" onchange="checkMatch('match4')">
                     <option value="">Seleziona...</option>
                     <option value="acqua_corrente">Acqua corrente</option>
                     <option value="aria">Aria in movimento</option>
@@ -521,7 +474,7 @@
 
             <div class="question">
                 <div class="question-text">5️⃣ Turbina idraulica →</div>
-                <select id="match5">
+                <select id="match5" onchange="checkMatch('match5')">
                     <option value="">Seleziona...</option>
                     <option value="acqua_corrente">Acqua corrente</option>
                     <option value="aria">Aria in movimento</option>
@@ -531,8 +484,6 @@
                 </select>
                 <div class="feedback" id="feedback-match5"></div>
             </div>
-
-            <button class="verify-btn" onclick="checkMatches()">✓ Verifica Associazioni</button>
         </div>
 
         <!-- PARTE 4: ORDINAMENTO CON FRECCE -->
@@ -545,7 +496,6 @@
             <div class="order-list" id="orderList"></div>
             <div class="feedback" id="feedback-order"></div>
             <button class="verify-btn" onclick="checkOrderArrows()">✓ Verifica Ordine</button>
-        </div>
         </div>
 
         <!-- PARTE 5: FLUIDI DI LAVORO -->
@@ -666,10 +616,17 @@
             order: {
                 answer: ['Caldaia', 'Cassetto di distribuzione', 'Cilindro', 'Stantuffo', 'Biella-manovella', 'Volano'],
                 explanation: 'Questo è l\'ordine corretto del flusso di energia: la Caldaia produce vapore → il Cassetto di distribuzione lo regola → entra nel Cilindro → spinge lo Stantuffo → che tramite Biella-manovella → fa girare il Volano.'
+            },
+            q6: {
+                answer: 'a',
+                explanation: 'I fluidi di lavoro sono sostanze liquide (come acqua) o gassose (come vapore o aria) che possiedono energia e la trasferiscono ai motori per farli funzionare.'
+            },
+            q7: {
+                answer: 'c',
+                explanation: 'Il vapore in pressione è un fluido artificiale creato dall\'uomo riscaldando l\'acqua in una caldaia. Vento e acqua di fiume sono fluidi naturali.'
             }
         };
 
-        let score = 0;
         let answeredQuestions = new Set();
 
         // Funzione per verificare domande a scelta multipla
@@ -681,22 +638,12 @@
             
             const isCorrect = selected.value === correctAnswers[questionId].answer;
             
-            if (isCorrect) {
-                feedback.className = 'feedback correct';
-                feedback.innerHTML = `✅ <strong>Corretto!</strong>
-                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                if (!answeredQuestions.has(questionId)) {
-                    score++;
-                    answeredQuestions.add(questionId);
-                }
-            } else {
-                feedback.className = 'feedback incorrect';
-                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
-                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                if (!answeredQuestions.has(questionId)) {
-                    answeredQuestions.add(questionId);
-                }
-            }
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = isCorrect 
+                ? `✅ <strong>Corretto!</strong><div class="explanation">${correctAnswers[questionId].explanation}</div>`
+                : `❌ <strong>Risposta errata</strong><div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+            
+            answeredQuestions.add(questionId);
         }
 
         // Gestione Vero/Falso con feedback immediato
@@ -706,69 +653,41 @@
             buttons.forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             
-            // Verifica immediata
-            const questionId = id;
-            const feedback = document.getElementById(`feedback-${questionId}`);
-            const isCorrect = value === correctAnswers[questionId].answer;
+            const feedback = document.getElementById(`feedback-${id}`);
+            const isCorrect = value === correctAnswers[id].answer;
             
-            if (isCorrect) {
-                feedback.className = 'feedback correct';
-                feedback.innerHTML = `✅ <strong>Corretto!</strong>
-                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                if (!answeredQuestions.has(questionId)) {
-                    score++;
-                    answeredQuestions.add(questionId);
-                }
-            } else {
-                feedback.className = 'feedback incorrect';
-                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
-                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                if (!answeredQuestions.has(questionId)) {
-                    answeredQuestions.add(questionId);
-                }
-            }
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = isCorrect 
+                ? `✅ <strong>Corretto!</strong><div class="explanation">${correctAnswers[id].explanation}</div>`
+                : `❌ <strong>Risposta errata</strong><div class="explanation">${correctAnswers[id].explanation}</div>`;
+            
+            answeredQuestions.add(id);
         }
 
-        // Verifica associazioni
-        function checkMatches() {
-            for (let i = 1; i <= 5; i++) {
-                const selected = document.getElementById(`match${i}`).value;
-                const feedback = document.getElementById(`feedback-match${i}`);
-                const questionId = `match${i}`;
-                
-                if (!selected) {
-                    feedback.className = 'feedback incorrect';
-                    feedback.innerHTML = '⚠️ <strong>Nessuna risposta selezionata</strong>';
-                    continue;
-                }
-                
-                const isCorrect = selected === correctAnswers[questionId].answer;
-                
-                if (isCorrect) {
-                    feedback.className = 'feedback correct';
-                    feedback.innerHTML = `✅ <strong>Corretto!</strong>
-                        <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                    if (!answeredQuestions.has(questionId)) {
-                        score++;
-                        answeredQuestions.add(questionId);
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-                    feedback.innerHTML = `❌ <strong>Risposta errata</strong>
-                        <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
-                    if (!answeredQuestions.has(questionId)) {
-                        answeredQuestions.add(questionId);
-                    }
-                }
+        // Verifica associazioni con feedback immediato
+        function checkMatch(matchId) {
+            const selected = document.getElementById(matchId).value;
+            const feedback = document.getElementById(`feedback-${matchId}`);
+            
+            if (!selected) {
+                feedback.style.display = 'none';
+                return;
             }
+
+            const isCorrect = selected === correctAnswers[matchId].answer;
+            
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = isCorrect 
+                ? `✅ <strong>Corretto!</strong><div class="explanation">${correctAnswers[matchId].explanation}</div>`
+                : `❌ <strong>Risposta errata</strong><div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+            
+            answeredQuestions.add(matchId);
         }
 
-        
         // ========================================
         // SISTEMA ORDINAMENTO CON FRECCE
         // ========================================
         
-        // Elementi da ordinare (ordine casuale iniziale)
         let orderItems = [
             'Volano',
             'Biella-manovella',
@@ -778,7 +697,6 @@
             'Cassetto di distribuzione'
         ];
         
-        // Genera la lista
         function renderOrderList() {
             const list = document.getElementById('orderList');
             if (!list) return;
@@ -795,7 +713,6 @@
             `).join('');
         }
         
-        // Sposta su
         function moveUp(index) {
             if (index > 0) {
                 [orderItems[index], orderItems[index - 1]] = [orderItems[index - 1], orderItems[index]];
@@ -803,7 +720,6 @@
             }
         }
         
-        // Sposta giù
         function moveDown(index) {
             if (index < orderItems.length - 1) {
                 [orderItems[index], orderItems[index + 1]] = [orderItems[index + 1], orderItems[index]];
@@ -811,7 +727,6 @@
             }
         }
         
-        // Verifica ordine con feedback immediato
         function checkOrderArrows() {
             const fb = document.getElementById('feedback-order');
             const correctOrder = ['Caldaia', 'Cassetto di distribuzione', 'Cilindro', 'Stantuffo', 'Biella-manovella', 'Volano'];
@@ -827,32 +742,64 @@
             if (isCorrect) {
                 fb.className = 'feedback correct';
                 fb.innerHTML = '✅ <strong>Ordine corretto!</strong><div class="explanation">Perfetto! Il flusso di energia è: Caldaia produce vapore → Cassetto di distribuzione lo regola → entra nel Cilindro → spinge lo Stantuffo → che tramite Biella-manovella → fa girare il Volano.</div>';
-                if (!answeredQuestions.has('order')) { score++; answeredQuestions.add('order'); }
+                answeredQuestions.add('order');
             } else {
                 fb.className = 'feedback incorrect';
                 fb.innerHTML = `❌ <strong>Ordine errato</strong><div class="explanation"><strong>Ordine corretto:</strong> ${correctOrder.join(' → ')}<br><br>Il flusso di energia parte dalla Caldaia che produce vapore, passa al Cassetto di distribuzione, entra nel Cilindro, spinge lo Stantuffo, che tramite la Biella-manovella fa girare il Volano.</div>`;
-                if (!answeredQuestions.has('order')) { answeredQuestions.add('order'); }
+                answeredQuestions.add('order');
             }
         }
         
-        // Inizializza quando la pagina è caricata
         if (document.getElementById('orderList')) {
             renderOrderList();
         }
 
-
-        // Gestione Drag & Drop per ordinamento
         function showFinalScore() {
-            const total = 17; // Totale domande
+            let score = 0;
+            const total = 18; // 7 scelta multipla + 5 vero/falso + 5 associazioni + 1 ordinamento
+            
+            // Conta le risposte corrette scelta multipla (q1-q7)
+            for (let i = 1; i <= 7; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === correctAnswers[`q${i}`].answer) {
+                    score++;
+                }
+            }
+            
+            // Conta le risposte corrette vero/falso (tf1-tf5)
+            for (let i = 1; i <= 5; i++) {
+                const answer = document.getElementById(`tf${i}`).value;
+                if (answer === correctAnswers[`tf${i}`].answer) {
+                    score++;
+                }
+            }
+            
+            // Conta le risposte corrette associazioni (match1-match5)
+            for (let i = 1; i <= 5; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                if (selected === correctAnswers[`match${i}`].answer) {
+                    score++;
+                }
+            }
+            
+            // Conta ordinamento
+            const correctOrder = ['Caldaia', 'Cassetto di distribuzione', 'Cilindro', 'Stantuffo', 'Biella-manovella', 'Volano'];
+            let orderCorrect = true;
+            for (let i = 0; i < orderItems.length; i++) {
+                if (orderItems[i] !== correctOrder[i]) {
+                    orderCorrect = false;
+                    break;
+                }
+            }
+            if (orderCorrect) score++;
+            
             const percentage = ((score / total) * 100).toFixed(1);
             const resultDiv = document.getElementById('result');
             
-            let emoji = '';
-            let message = '';
-            
+            let emoji = '', message = '';
             if (percentage >= 90) {
                 emoji = '🏆';
-                message = 'Eccellente! Ottima conoscenza!';
+                message = 'Eccellente! Ottima conoscenza dei motori!';
             } else if (percentage >= 75) {
                 emoji = '👍';
                 message = 'Buono! Continua così!';
@@ -871,8 +818,6 @@
                 <div style="font-size: 1em; margin-top: 10px; opacity: 0.95;">${message}</div>
             `;
             resultDiv.style.display = 'block';
-            
-            // Scroll al risultato
             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     </script>
