@@ -127,37 +127,6 @@
             border-color: #8e2de2;
         }
 
-        .sortable-list {
-            min-height: 50px;
-        }
-
-        .sortable-item {
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: move;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sortable-item:hover {
-            border-color: #8e2de2;
-            box-shadow: 0 4px 12px rgba(142, 45, 226, 0.3);
-        }
-
-        .sortable-item.dragging {
-            opacity: 0.5;
-        }
-
-        .drag-handle {
-            font-size: 1.2em;
-            color: #999;
-        }
-
         .submit-btn {
             width: 100%;
             padding: 18px;
@@ -175,6 +144,23 @@
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(142, 45, 226, 0.6);
+        }
+
+        .verify-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(142, 45, 226, 0.4);
         }
 
         .result {
@@ -202,13 +188,21 @@
             background: #d4edda;
             color: #155724;
             border: 2px solid #c3e6cb;
+            display: block;
         }
 
         .feedback.incorrect {
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
             background: #f8d7da;
             color: #721c24;
             border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 0.95em;
+            font-weight: normal;
+            line-height: 1.5;
         }
 
         .instruction {
@@ -233,6 +227,76 @@
         select:focus {
             outline: none;
             border-color: #8e2de2;
+        }
+
+        .order-list {
+            padding: 0;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            gap: 10px;
+        }
+
+        .order-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .arrow-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #8e2de2;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .arrow-btn:hover {
+            background: #8e2de2;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .arrow-btn:active {
+            transform: scale(0.95);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .order-text {
+            flex: 1;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+
+        .order-number {
+            background: #8e2de2;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
         }
     </style>
 </head>
@@ -436,7 +500,7 @@
             
             <div class="question">
                 <div class="question-text">Statore →</div>
-                <select id="match1">
+                <select id="match1" onchange="checkMatch('match1')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -450,7 +514,7 @@
 
             <div class="question">
                 <div class="question-text">Rotore →</div>
-                <select id="match2">
+                <select id="match2" onchange="checkMatch('match2')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -464,7 +528,7 @@
 
             <div class="question">
                 <div class="question-text">Stadio →</div>
-                <select id="match3">
+                <select id="match3" onchange="checkMatch('match3')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -478,7 +542,7 @@
 
             <div class="question">
                 <div class="question-text">Albero →</div>
-                <select id="match4">
+                <select id="match4" onchange="checkMatch('match4')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -492,7 +556,7 @@
 
             <div class="question">
                 <div class="question-text">Ugelli →</div>
-                <select id="match5">
+                <select id="match5" onchange="checkMatch('match5')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -506,7 +570,7 @@
 
             <div class="question">
                 <div class="question-text">Palette →</div>
-                <select id="match6">
+                <select id="match6" onchange="checkMatch('match6')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
                     <option value="rotore">🌀 Ruote mobili con palette che girano</option>
@@ -519,43 +583,15 @@
             </div>
         </div>
 
-        <!-- PARTE 4: METTI IN ORDINE -->
+        <!-- PARTE 4: ORDINAMENTO CON FRECCE -->
         <div class="section">
             <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
-            <div class="instruction">Ordina il percorso del vapore nella turbina. Trascina gli elementi per riordinarli.</div>
+            <div class="instruction">💡 Usa le frecce ↑ ↓ per ordinare il percorso del vapore nella turbina</div>
             
             <div class="question">
-                <div class="sortable-list" id="sortable">
-                    <div class="sortable-item" draggable="true" data-id="1">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Colpisce le palette successive</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="2">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Passa negli ugelli del primo anello dello statore</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="3">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Esce raffreddato</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="4">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Entra negli stadi di bassa pressione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="5">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Il vapore ad alta pressione entra nella turbina</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="6">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Colpisce le palette della prima ruota del rotore</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="7">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Prosegue negli ugelli del secondo stadio</span>
-                    </div>
-                </div>
+                <div class="order-list" id="orderList"></div>
                 <div class="feedback" id="feedback-order"></div>
+                <button class="verify-btn" onclick="checkOrder()">✓ Verifica Ordine</button>
             </div>
         </div>
 
@@ -675,153 +711,313 @@
     </div>
 
     <script>
-        // Risposte corrette
+        // Risposte corrette con spiegazioni
         const correctAnswers = {
-            q1: 'a',
-            q2: 'a',
-            q3: 'a',
-            q4: 'a',
-            q5: 'a',
-            q6: 'a',
-            tf1: 'vero',
-            tf2: 'vero',
-            tf3: 'falso',
-            tf4: 'vero',
-            tf5: 'falso',
-            match1: 'statore',
-            match2: 'rotore',
-            match3: 'stadio',
-            match4: 'albero',
-            match5: 'ugelli',
-            match6: 'palette',
-            order: [
-                'Il vapore ad alta pressione entra nella turbina',
-                'Passa negli ugelli del primo anello dello statore',
-                'Colpisce le palette della prima ruota del rotore',
-                'Prosegue negli ugelli del secondo stadio',
-                'Colpisce le palette successive',
-                'Entra negli stadi di bassa pressione',
-                'Esce raffreddato'
-            ],
-            q7: 'a',
-            q8: 'a',
-            q9: 'a',
-            q10: 'a',
-            q11: 'a'
+            q1: {
+                answer: 'a',
+                explanation: 'Le turbine a vapore sono utilizzate principalmente nelle centrali termoelettriche per far girare gli alternatori che producono energia elettrica, e sulle grandi navi per azionare le eliche di propulsione.'
+            },
+            q2: {
+                answer: 'a',
+                explanation: 'La turbina a vapore funziona con vapore ad altissima pressione (circa 500 atmosfere) e temperatura molto elevata, prodotto dalla caldaia.'
+            },
+            q3: {
+                answer: 'a',
+                explanation: 'La turbina a vapore è il motore più potente esistente. Nelle grandi centrali termoelettriche può produrre potenze superiori a 1500 MW (megawatt), equivalenti a oltre 2 milioni di cavalli vapore!'
+            },
+            q4: {
+                answer: 'a',
+                explanation: 'Ogni turbina a vapore è composta da due parti fondamentali: lo statore (parte fissa) e il rotore (parte mobile che ruota).'
+            },
+            q5: {
+                answer: 'a',
+                explanation: 'Lo statore è la parte fissa della turbina, costituita da una serie di anelli fissi dotati di numerosi ugelli convergenti da cui esce il vapore ad alta velocità.'
+            },
+            q6: {
+                answer: 'a',
+                explanation: 'Il rotore è la parte mobile della turbina, formato da una serie di ruote affiancate sull\'albero motore, ciascuna dotata di palette che vengono colpite dal vapore e messe in rotazione.'
+            },
+            tf1: {
+                answer: 'vero',
+                explanation: 'Corretto! La turbina è costruita con una struttura alternata: a ogni anello fisso dello statore corrisponde una ruota mobile del rotore, in modo che il vapore passi alternativamente attraverso ugelli fissi e palette mobili.'
+            },
+            tf2: {
+                answer: 'vero',
+                explanation: 'Esatto! Una coppia formata da un anello dello statore e la corrispondente ruota del rotore costituisce uno "stadio" della turbina. Le turbine moderne hanno decine di stadi in sequenza.'
+            },
+            tf3: {
+                answer: 'falso',
+                explanation: 'No, è il contrario! Il vapore passa prima attraverso gli stadi di alta pressione (dove la pressione è massima) e poi progressivamente attraverso gli stadi di bassa pressione (dove la pressione diminuisce gradualmente).'
+            },
+            tf4: {
+                answer: 'vero',
+                explanation: 'Corretto! Le palette degli stadi di bassa pressione sono progressivamente più grandi perché il vapore, man mano che cede energia, si espande occupando più volume e ha meno pressione, quindi servono palette più ampie per catturarne l\'energia residua.'
+            },
+            tf5: {
+                answer: 'falso',
+                explanation: 'No! Il vapore ad alta pressione entra nella turbina attraverso gli ugelli del PRIMO stadio, non del secondo. Inizia dal primo stadio ad alta pressione e poi passa progressivamente agli stadi successivi.'
+            },
+            match1: {
+                answer: 'statore',
+                explanation: 'Lo statore è la parte fissa della turbina, costituita da anelli fissi dotati di ugelli che direzionano il vapore ad alta velocità verso le palette del rotore.'
+            },
+            match2: {
+                answer: 'rotore',
+                explanation: 'Il rotore è la parte mobile della turbina, formata da ruote affiancate sull\'albero motore, ciascuna dotata di palette che vengono colpite dal vapore e ruotano trasmettendo movimento all\'albero.'
+            },
+            match3: {
+                answer: 'stadio',
+                explanation: 'Uno stadio è l\'unità funzionale base della turbina, costituita dalla coppia anello dello statore-ruota del rotore, dove avviene un passaggio completo di trasferimento di energia dal vapore al rotore.'
+            },
+            match4: {
+                answer: 'albero',
+                explanation: 'L\'albero motore è l\'asse centrale che sostiene tutte le ruote del rotore e raccoglie il movimento rotatorio trasmesso dalle palette, trasferendolo all\'esterno (all\'alternatore o all\'elica).'
+            },
+            match5: {
+                answer: 'ugelli',
+                explanation: 'Gli ugelli sono aperture convergenti negli anelli dello statore che accelerano il vapore e lo convogliano ad alta velocità (fino a 1000 km/h!) sulle palette del rotore, massimizzando il trasferimento di energia.'
+            },
+            match6: {
+                answer: 'palette',
+                explanation: 'Le palette sono elementi a forma di cucchiaio montati sulle ruote del rotore che ricevono l\'impatto del getto di vapore ad alta velocità, trasformando l\'energia cinetica del vapore in movimento rotatorio.'
+            },
+            order: {
+                answer: [
+                    'Il vapore ad alta pressione entra nella turbina',
+                    'Passa negli ugelli del primo anello dello statore',
+                    'Colpisce le palette della prima ruota del rotore',
+                    'Prosegue negli ugelli del secondo stadio',
+                    'Colpisce le palette successive',
+                    'Entra negli stadi di bassa pressione',
+                    'Esce raffreddato'
+                ],
+                explanation: 'Questo è il percorso completo del vapore nella turbina: entra ad alta pressione → viene accelerato negli ugelli del primo stadio → colpisce le palette della prima ruota → passa attraverso gli ugelli del secondo stadio → colpisce le palette successive → prosegue negli stadi di bassa pressione con palette sempre più grandi → esce raffreddato e a bassa pressione.'
+            },
+            q7: {
+                answer: 'a',
+                explanation: 'Gli stadi di alta pressione sono i primi della turbina e ricevono il vapore direttamente dalla caldaia, quando è ancora alla massima temperatura (circa 550°C) e pressione (circa 500 atmosfere).'
+            },
+            q8: {
+                answer: 'a',
+                explanation: 'Le palette degli stadi di bassa pressione sono progressivamente più grandi perché il vapore, man mano che attraversa la turbina cedendo energia, si espande e diventa meno denso e potente. Palette più grandi permettono di estrarre energia anche da questo vapore a bassa pressione.'
+            },
+            q9: {
+                answer: 'a',
+                explanation: 'Il vapore che esce dagli stadi di alta pressione prosegue il suo percorso entrando negli stadi di bassa pressione, dove continua a cedere energia pur essendosi raffreddato e avendo perso pressione.'
+            },
+            q10: {
+                answer: 'a',
+                explanation: 'Gli ugelli del primo stadio hanno sezione convergente (si restringono) per accelerare enormemente il vapore: riducendo la sezione di passaggio, il vapore viene spinto a velocità elevatissime (fino a 1000 km/h), trasformando l\'energia di pressione in energia cinetica.'
+            },
+            q11: {
+                answer: 'a',
+                explanation: 'Oltre che nelle centrali elettriche, le turbine a vapore sono utilizzate sulle grandi navi (soprattutto militari e portaerei) per far girare le eliche di propulsione, sfruttando la loro enorme potenza e affidabilità.'
+            }
         };
 
+        let score = 0;
+        let answeredQuestions = new Set();
 
-            // Verifica scelta multipla (Parte 1 e 5)
-            for (let i = 1; i <= 11; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                const feedback = document.getElementById(`feedback-q${i}`);
-                
-                if (selected) {
-                    if (selected.value === correctAnswers[`q${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica Vero/Falso
-            for (let i = 1; i <= 5; i++) {
-                const answer = document.getElementById(`tf${i}`).value;
-                const feedback = document.getElementById(`feedback-tf${i}`);
-                
-                if (answer) {
-                    if (answer === correctAnswers[`tf${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica associazioni
-            for (let i = 1; i <= 6; i++) {
-                const selected = document.getElementById(`match${i}`).value;
-                const feedback = document.getElementById(`feedback-match${i}`);
-                
-                if (selected) {
-                    if (selected === correctAnswers[`match${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica ordine
-            const sortedItems = Array.from(sortableList.children).map(item => 
-                item.querySelector('span:last-child').textContent
-            );
-            const feedback = document.getElementById('feedback-order');
+        // Funzione per verificare domande a scelta multipla
+        function checkQuestion(questionId) {
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedback = document.getElementById(`feedback-${questionId}`);
             
-            let orderCorrect = true;
-            for (let i = 0; i < sortedItems.length; i++) {
-                if (sortedItems[i] !== correctAnswers.order[i]) {
-                    orderCorrect = false;
+            if (!selected) return;
+            
+            const isCorrect = selected.value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Gestione Vero/Falso con feedback immediato
+        function selectTF(id, value) {
+            document.getElementById(id).value = value;
+            const buttons = event.target.parentElement.querySelectorAll('.tf-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Verifica immediata
+            const questionId = id;
+            const feedback = document.getElementById(`feedback-${questionId}`);
+            const isCorrect = value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Verifica associazioni con feedback immediato
+        function checkMatch(matchId) {
+            const selected = document.getElementById(matchId).value;
+            const feedback = document.getElementById(`feedback-${matchId}`);
+            
+            if (!selected) {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '⚠️ <strong>Nessuna risposta selezionata</strong>';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            const isCorrect = selected === correctAnswers[matchId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    score++;
+                    answeredQuestions.add(matchId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    answeredQuestions.add(matchId);
+                }
+            }
+        }
+
+        // ========================================
+        // SISTEMA ORDINAMENTO CON FRECCE
+        // ========================================
+        
+        // Elementi da ordinare (ordine casuale iniziale)
+        let orderItems = [
+            'Colpisce le palette successive',
+            'Passa negli ugelli del primo anello dello statore',
+            'Esce raffreddato',
+            'Entra negli stadi di bassa pressione',
+            'Il vapore ad alta pressione entra nella turbina',
+            'Colpisce le palette della prima ruota del rotore',
+            'Prosegue negli ugelli del secondo stadio'
+        ];
+        
+        // Genera la lista
+        function renderOrderList() {
+            const list = document.getElementById('orderList');
+            if (!list) return;
+            
+            list.innerHTML = orderItems.map((item, index) => `
+                <div class="order-item">
+                    <div class="order-number">${index + 1}</div>
+                    <div class="order-buttons">
+                        <button class="arrow-btn" onclick="moveUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="arrow-btn" onclick="moveDown(${index})" ${index === orderItems.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    <div class="order-text">${item}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Sposta su
+        function moveUp(index) {
+            if (index > 0) {
+                [orderItems[index], orderItems[index - 1]] = [orderItems[index - 1], orderItems[index]];
+                renderOrderList();
+            }
+        }
+        
+        // Sposta giù
+        function moveDown(index) {
+            if (index < orderItems.length - 1) {
+                [orderItems[index], orderItems[index + 1]] = [orderItems[index + 1], orderItems[index]];
+                renderOrderList();
+            }
+        }
+        
+        // Verifica ordine con feedback immediato
+        function checkOrder() {
+            const fb = document.getElementById('feedback-order');
+            const correctOrder = correctAnswers.order.answer;
+            let isCorrect = true;
+            
+            for (let i = 0; i < orderItems.length; i++) {
+                if (orderItems[i] !== correctOrder[i]) {
+                    isCorrect = false;
                     break;
                 }
             }
             
-            if (orderCorrect) {
-                score++;
-                feedback.className = 'feedback correct';
-                feedback.textContent = '✅ Ordine corretto!';
-                feedback.style.display = 'block';
+            if (isCorrect) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = `✅ <strong>Ordine corretto!</strong><div class="explanation">${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has('order')) {
+                    score++;
+                    answeredQuestions.add('order');
+                }
             } else {
-                feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                feedback.textContent = '❌ Ordine errato. Ordine corretto: Vapore entra → Ugelli 1° anello → Palette 1ª ruota → Ugelli 2° stadio → Palette successive → Stadi bassa pressione → Esce raffreddato';
-                feedback.style.display = 'block';
+                fb.className = 'feedback incorrect';
+                let orderDisplay = correctOrder.map((item, idx) => `${idx + 1}. ${item}`).join('<br>');
+                fb.innerHTML = `❌ <strong>Ordine errato</strong><div class="explanation"><strong>Ordine corretto:</strong><br>${orderDisplay}<br><br>${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has('order')) {
+                    answeredQuestions.add('order');
+                }
             }
+        }
+        
+        // Inizializza quando la pagina è caricata
+        if (document.getElementById('orderList')) {
+            renderOrderList();
+        }
 
-            // Mostra risultato
+        // Mostra punteggio finale
+        function showFinalScore() {
+            const total = 23; // 11 scelta multipla + 5 vero/falso + 6 associazioni + 1 ordine
             const percentage = ((score / total) * 100).toFixed(1);
             const resultDiv = document.getElementById('result');
+            
+            let emoji = '';
+            let message = '';
+            
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'Eccellente! Ottima conoscenza della turbina a vapore!';
+            } else if (percentage >= 75) {
+                emoji = '👍';
+                message = 'Buono! Continua così!';
+            } else if (percentage >= 60) {
+                emoji = '📚';
+                message = 'Sufficiente. Ripassa alcuni concetti.';
+            } else {
+                emoji = '📖';
+                message = 'Da ripassare. Studia ancora un po\'.';
+            }
+            
             resultDiv.innerHTML = `
-                🎯 Punteggio: ${score}/${total} (${percentage}%)
-                <br>
-                ${percentage >= 90 ? '🏆 Eccellente!' : 
-                  percentage >= 75 ? '👍 Buono!' : 
-                  percentage >= 60 ? '📚 Sufficiente' : 
-                  '📖 Da ripassare'}
+                ${emoji} <strong>PUNTEGGIO FINALE</strong><br>
+                <div style="font-size: 2em; margin: 15px 0;">${score}/${total}</div>
+                <div style="font-size: 1.5em;">${percentage}%</div>
+                <div style="font-size: 1em; margin-top: 10px; opacity: 0.95;">${message}</div>
             `;
             resultDiv.style.display = 'block';
             
