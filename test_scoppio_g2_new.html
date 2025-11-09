@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Unità G2 - MOTORE A SCOPPIO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f093fb;
+        }
+
+        .header h1 {
+            color: #f093fb;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #f5576c;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #f093fb;
+        }
+
+        .section-title {
+            color: #d64d8a;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #f093fb;
+            background: #fef0f7;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tf-button {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .tf-button:hover {
+            border-color: #f093fb;
+            background: #fef0f7;
+        }
+
+        .tf-button.selected {
+            background: #f093fb;
+            color: white;
+            border-color: #f093fb;
+        }
+
+        .sortable-list {
+            min-height: 50px;
+        }
+
+        .sortable-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sortable-item:hover {
+            border-color: #f093fb;
+            box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+        }
+
+        .sortable-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drag-handle {
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .instruction {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-style: italic;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #f093fb;
+        }
+
+        .subsection-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #f5576c;
+            margin: 20px 0 15px 0;
+            padding: 10px;
+            background: #fff5f8;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧭 TEST UNITÀ G2 – SEZIONE 6</h1>
+            <div class="subtitle">🔥 MOTORE A SCOPPIO</div>
+        </div>
+
+        <!-- PARTE 1: SCELTA MULTIPLA -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 1 – Scelta multipla (una sola risposta corretta)</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Il motore a scoppio è più leggero del motore a vapore perché:</div>
+                <label class="option">
+                    <input type="radio" name="q1" value="a" onchange="checkQuestion('q1')">
+                    Non ha bisogno della caldaia, essendo a combustione interna
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="b" onchange="checkQuestion('q1')">
+                    È costruito in legno
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="c" onchange="checkQuestion('q1')">
+                    Funziona con acqua anziché carburante
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="d" onchange="checkQuestion('q1')">
+                    Ha meno cilindri
+                </label>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Nel motore a scoppio la combustione avviene:</div>
+                <label class="option">
+                    <input type="radio" name="q2" value="a" onchange="checkQuestion('q2')">
+                    All'interno del cilindro
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="b" onchange="checkQuestion('q2')">
+                    Nella caldaia
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="c" onchange="checkQuestion('q2')">
+                    Nel volano
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="d" onchange="checkQuestion('q2')">
+                    Nel carburatore
+                </label>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Lo scoppio del carburante provoca:</div>
+                <label class="option">
+                    <input type="radio" name="q3" value="a" onchange="checkQuestion('q3')">
+                    Una forte pressione che spinge lo stantuffo
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="b" onchange="checkQuestion('q3')">
+                    L'ingresso del vapore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="c" onchange="checkQuestion('q3')">
+                    L'apertura delle valvole
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="d" onchange="checkQuestion('q3')">
+                    L'uscita dei gas di scarico
+                </label>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Il motore a benzina a quattro tempi è detto anche:</div>
+                <label class="option">
+                    <input type="radio" name="q4" value="a" onchange="checkQuestion('q4')">
+                    Motore a ciclo Otto
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="b" onchange="checkQuestion('q4')">
+                    Motore a ciclo Diesel
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="c" onchange="checkQuestion('q4')">
+                    Motore Pelton
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="d" onchange="checkQuestion('q4')">
+                    Motore a miscela
+                </label>
+                <div class="feedback" id="feedback-q4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Il motore a gasolio a quattro tempi è detto anche:</div>
+                <label class="option">
+                    <input type="radio" name="q5" value="a" onchange="checkQuestion('q5')">
+                    Motore a ciclo Diesel
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="b" onchange="checkQuestion('q5')">
+                    Motore a ciclo Otto
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="c" onchange="checkQuestion('q5')">
+                    Motore a ciclo Kaplan
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="d" onchange="checkQuestion('q5')">
+                    Motore a vapore
+                </label>
+                <div class="feedback" id="feedback-q5"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6️⃣ Durante la fase di aspirazione del motore a benzina:</div>
+                <label class="option">
+                    <input type="radio" name="q6" value="a" onchange="checkQuestion('q6')">
+                    Il pistone scende e aspira aria e benzina nebulizzata
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="b" onchange="checkQuestion('q6')">
+                    Il pistone risale e comprime la miscela
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="c" onchange="checkQuestion('q6')">
+                    Il pistone espelle i gas di scarico
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="d" onchange="checkQuestion('q6')">
+                    Il pistone si ferma al punto morto superiore
+                </label>
+                <div class="feedback" id="feedback-q6"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">7️⃣ Durante la fase di espansione del motore a benzina:</div>
+                <label class="option">
+                    <input type="radio" name="q7" value="a" onchange="checkQuestion('q7')">
+                    Scocca la scintilla e i gas spingono il pistone verso il basso
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="b" onchange="checkQuestion('q7')">
+                    Il pistone sale e comprime l'aria
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="c" onchange="checkQuestion('q7')">
+                    Il pistone scende e aspira la miscela
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="d" onchange="checkQuestion('q7')">
+                    Il pistone espelle i gas combusti
+                </label>
+                <div class="feedback" id="feedback-q7"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">8️⃣ Nel motore Diesel, la miscela si incendia perché:</div>
+                <label class="option">
+                    <input type="radio" name="q8" value="a" onchange="checkQuestion('q8')">
+                    L'aria compressa raggiunge 700–800 °C e accende il gasolio
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="b" onchange="checkQuestion('q8')">
+                    C'è una scintilla della candela
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="c" onchange="checkQuestion('q8')">
+                    Si accende una fiamma esterna
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="d" onchange="checkQuestion('q8')">
+                    L'olio brucia spontaneamente
+                </label>
+                <div class="feedback" id="feedback-q8"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">9️⃣ Il motore Diesel non ha:</div>
+                <label class="option">
+                    <input type="radio" name="q9" value="a" onchange="checkQuestion('q9')">
+                    La candela di accensione
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="b" onchange="checkQuestion('q9')">
+                    L'iniettore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="c" onchange="checkQuestion('q9')">
+                    L'albero motore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="d" onchange="checkQuestion('q9')">
+                    La valvola di scarico
+                </label>
+                <div class="feedback" id="feedback-q9"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">🔟 Il motore Diesel è usato soprattutto:</div>
+                <label class="option">
+                    <input type="radio" name="q10" value="a" onchange="checkQuestion('q10')">
+                    Su camion, autobus, macchine agricole e navi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="b" onchange="checkQuestion('q10')">
+                    Su biciclette e pattini elettrici
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="c" onchange="checkQuestion('q10')">
+                    Solo sugli aerei a elica
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="d" onchange="checkQuestion('q10')">
+                    Sui piccoli motori da giardino
+                </label>
+                <div class="feedback" id="feedback-q10"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 2: VERO O FALSO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 2 – Vero o Falso</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Nel motore a benzina la miscela è composta da aria e gasolio.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf1', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf1', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf1" value="">
+                <div class="feedback" id="feedback-tf1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Nel motore a scoppio la combustione è interna.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf2', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf2', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf2" value="">
+                <div class="feedback" id="feedback-tf2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il motore Diesel consuma più del motore a benzina.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf3', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf3', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf3" value="">
+                <div class="feedback" id="feedback-tf3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Durante la compressione le valvole sono chiuse.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf4', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf4', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf4" value="">
+                <div class="feedback" id="feedback-tf4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ La fase attiva è l'espansione.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf5', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf5', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf5" value="">
+                <div class="feedback" id="feedback-tf5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 3: ASSOCIAZIONI FASI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 3 – Associazioni</div>
+            <div class="instruction">Collega ogni fase del ciclo a quattro tempi alla sua descrizione</div>
+            
+            <div class="question">
+                <div class="question-text">Aspirazione →</div>
+                <select id="match1">
+                    <option value="">-- Seleziona la descrizione --</option>
+                    <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
+                    <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
+                    <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                </select>
+                <div class="feedback" id="feedback-match1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Compressione →</div>
+                <select id="match2">
+                    <option value="">-- Seleziona la descrizione --</option>
+                    <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
+                    <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
+                    <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                </select>
+                <div class="feedback" id="feedback-match2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Espansione →</div>
+                <select id="match3">
+                    <option value="">-- Seleziona la descrizione --</option>
+                    <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
+                    <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
+                    <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                </select>
+                <div class="feedback" id="feedback-match3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Scarico →</div>
+                <select id="match4">
+                    <option value="">-- Seleziona la descrizione --</option>
+                    <option value="aspirazione">⬇️ Il pistone scende e fa entrare aria e benzina (o solo aria nel Diesel)</option>
+                    <option value="compressione">⬆️ Il pistone risale e comprime la miscela o l'aria</option>
+                    <option value="espansione">💥 La miscela esplode e spinge il pistone verso il basso</option>
+                    <option value="scarico">⬆️ Il pistone espelle i gas combusti attraverso la valvola di destra</option>
+                </select>
+                <div class="feedback" id="feedback-match4"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 4: METTI IN ORDINE -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
+            
+            <div class="subsection-title">Ciclo Otto (motore a benzina)</div>
+            <div class="instruction">Ordina i tempi del motore a benzina a quattro tempi. Trascina gli elementi per riordinarli.</div>
+            
+            <div class="question">
+                <div class="sortable-list" id="sortable-otto">
+                    <div class="sortable-item" draggable="true" data-id="1">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Scarico</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="2">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Compressione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="3">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Aspirazione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="4">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Espansione</span>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-order-otto"></div>
+            </div>
+
+            <div class="subsection-title">Ciclo Diesel (motore a gasolio)</div>
+            <div class="instruction">Ordina i tempi del motore Diesel a quattro tempi. Trascina gli elementi per riordinarli.</div>
+            
+            <div class="question">
+                <div class="sortable-list" id="sortable-diesel">
+                    <div class="sortable-item" draggable="true" data-id="1">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Espansione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="2">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Scarico</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="3">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Compressione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="4">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Aspirazione</span>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-order-diesel"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 5: MOTORE A DUE TEMPI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 5 – Scelta multipla specifica (motore a due tempi)</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Il motore a due tempi funziona con:</div>
+                <label class="option">
+                    <input type="radio" name="q11" value="a" onchange="checkQuestion('q11')">
+                    Una miscela di benzina e olio
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="b" onchange="checkQuestion('q11')">
+                    Solo gasolio
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="c" onchange="checkQuestion('q11')">
+                    Solo aria
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="d" onchange="checkQuestion('q11')">
+                    Acqua e benzina
+                </label>
+                <div class="feedback" id="feedback-q11"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Nel motore a due tempi:</div>
+                <label class="option">
+                    <input type="radio" name="q12" value="a" onchange="checkQuestion('q12')">
+                    Le luci si aprono e si chiudono con il movimento del pistone
+                </label>
+                <label class="option">
+                    <input type="radio" name="q12" value="b" onchange="checkQuestion('q12')">
+                    Le valvole si aprono elettronicamente
+                </label>
+                <label class="option">
+                    <input type="radio" name="q12" value="c" onchange="checkQuestion('q12')">
+                    È presente una candela per ogni luce
+                </label>
+                <label class="option">
+                    <input type="radio" name="q12" value="d" onchange="checkQuestion('q12')">
+                    Si usano pistoni fissi
+                </label>
+                <div class="feedback" id="feedback-q12"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il motore a due tempi non possiede:</div>
+                <label class="option">
+                    <input type="radio" name="q13" value="a" onchange="checkQuestion('q13')">
+                    Le valvole di aspirazione e di scarico come il quattro tempi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q13" value="b" onchange="checkQuestion('q13')">
+                    Il pistone
+                </label>
+                <label class="option">
+                    <input type="radio" name="q13" value="c" onchange="checkQuestion('q13')">
+                    La camera di scoppio
+                </label>
+                <label class="option">
+                    <input type="radio" name="q13" value="d" onchange="checkQuestion('q13')">
+                    L'albero motore
+                </label>
+                <div class="feedback" id="feedback-q13"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Durante il 1° tempo del motore a due tempi (scoppio e scarico):</div>
+                <label class="option">
+                    <input type="radio" name="q14" value="a" onchange="checkQuestion('q14')">
+                    La scintilla fa esplodere la miscela e i gas spingono il pistone in basso
+                </label>
+                <label class="option">
+                    <input type="radio" name="q14" value="b" onchange="checkQuestion('q14')">
+                    Il pistone comprime l'aria
+                </label>
+                <label class="option">
+                    <input type="radio" name="q14" value="c" onchange="checkQuestion('q14')">
+                    La miscela entra nel cilindro dal carburatore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q14" value="d" onchange="checkQuestion('q14')">
+                    I gas combusti vengono aspirati
+                </label>
+                <div class="feedback" id="feedback-q14"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Durante il 2° tempo del motore a due tempi (aspirazione e compressione):</div>
+                <label class="option">
+                    <input type="radio" name="q15" value="a" onchange="checkQuestion('q15')">
+                    La miscela entra nella camera di scoppio e viene compressa
+                </label>
+                <label class="option">
+                    <input type="radio" name="q15" value="b" onchange="checkQuestion('q15')">
+                    I gas combusti escono
+                </label>
+                <label class="option">
+                    <input type="radio" name="q15" value="c" onchange="checkQuestion('q15')">
+                    Il pistone rimane fermo
+                </label>
+                <label class="option">
+                    <input type="radio" name="q15" value="d" onchange="checkQuestion('q15')">
+                    Scocca la scintilla
+                </label>
+                <div class="feedback" id="feedback-q15"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6️⃣ Il motore a due tempi era molto usato nei:</div>
+                <label class="option">
+                    <input type="radio" name="q16" value="a" onchange="checkQuestion('q16')">
+                    Ciclomotori da 50 cc del passato
+                </label>
+                <label class="option">
+                    <input type="radio" name="q16" value="b" onchange="checkQuestion('q16')">
+                    Motori Diesel industriali
+                </label>
+                <label class="option">
+                    <input type="radio" name="q16" value="c" onchange="checkQuestion('q16')">
+                    Treni elettrici
+                </label>
+                <label class="option">
+                    <input type="radio" name="q16" value="d" onchange="checkQuestion('q16')">
+                    Navi a turbina
+                </label>
+                <div class="feedback" id="feedback-q16"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">7️⃣ Oggi il motore a due tempi è poco usato perché:</div>
+                <label class="option">
+                    <input type="radio" name="q17" value="a" onchange="checkQuestion('q17')">
+                    Inquina troppo
+                </label>
+                <label class="option">
+                    <input type="radio" name="q17" value="b" onchange="checkQuestion('q17')">
+                    È troppo costoso
+                </label>
+                <label class="option">
+                    <input type="radio" name="q17" value="c" onchange="checkQuestion('q17')">
+                    Non produce abbastanza potenza
+                </label>
+                <label class="option">
+                    <input type="radio" name="q17" value="d" onchange="checkQuestion('q17')">
+                    Richiede troppa manutenzione
+                </label>
+                <div class="feedback" id="feedback-q17"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 6: ASSOCIAZIONI TIPOLOGIE -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 6 – Associazioni per tipologia di motore</div>
+            <div class="instruction">Collega il motore al suo carburante o tipo di accensione</div>
+            
+            <div class="question">
+                <div class="question-text">Motore a ciclo Otto →</div>
+                <select id="match5">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="otto">⚡ Usa benzina e candela di accensione</option>
+                    <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
+                    <option value="duetempi">🛠️ Usa miscela di benzina e olio; luci aperte/chiuse dal pistone</option>
+                </select>
+                <div class="feedback" id="feedback-match5"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Motore a ciclo Diesel →</div>
+                <select id="match6">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="otto">⚡ Usa benzina e candela di accensione</option>
+                    <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
+                    <option value="duetempi">🛠️ Usa miscela di benzina e olio; luci aperte/chiuse dal pistone</option>
+                </select>
+                <div class="feedback" id="feedback-match6"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Motore a due tempi →</div>
+                <select id="match7">
+                    <option value="">-- Seleziona la caratteristica --</option>
+                    <option value="otto">⚡ Usa benzina e candela di accensione</option>
+                    <option value="diesel">🔥 Usa gasolio e accensione per compressione</option>
+                    <option value="duetempi">🛠️ Usa miscela di benzina e olio; luci aperte/chiuse dal pistone</option>
+                </select>
+                <div class="feedback" id="feedback-match7"></div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="showFinalScore()">📝 MOSTRA PUNTEGGIO FINALE</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Risposte corrette
+        const correctAnswers = {
+            q1: 'a', q2: 'a', q3: 'a', q4: 'a', q5: 'a',
+            q6: 'a', q7: 'a', q8: 'a', q9: 'a', q10: 'a',
+            tf1: 'falso', tf2: 'vero', tf3: 'falso', tf4: 'vero', tf5: 'vero',
+            match1: 'aspirazione',
+            match2: 'compressione',
+            match3: 'espansione',
+            match4: 'scarico',
+            orderOtto: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
+            orderDiesel: ['Aspirazione', 'Compressione', 'Espansione', 'Scarico'],
+            q11: 'a', q12: 'a', q13: 'a', q14: 'a', q15: 'a', q16: 'a', q17: 'a',
+            match5: 'otto',
+            match6: 'diesel',
+            match7: 'duetempi'
+        };
+
+
+            // Verifica scelta multipla (Parte 1 e 5)
+            for (let i = 1; i <= 17; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                
+                if (selected) {
+                    if (selected.value === correctAnswers[`q${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica Vero/Falso
+            for (let i = 1; i <= 5; i++) {
+                const answer = document.getElementById(`tf${i}`).value;
+                const feedback = document.getElementById(`feedback-tf${i}`);
+                
+                if (answer) {
+                    if (answer === correctAnswers[`tf${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica associazioni fasi
+            for (let i = 1; i <= 4; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                const feedback = document.getElementById(`feedback-match${i}`);
+                
+                if (selected) {
+                    if (selected === correctAnswers[`match${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica ordine Otto
+            const sortedItemsOtto = Array.from(document.getElementById('sortable-otto').children).map(item => 
+                item.querySelector('span:last-child').textContent
+            );
+            const feedbackOtto = document.getElementById('feedback-order-otto');
+            
+            let orderOttoCorrect = true;
+            for (let i = 0; i < sortedItemsOtto.length; i++) {
+                if (sortedItemsOtto[i] !== correctAnswers.orderOtto[i]) {
+                    orderOttoCorrect = false;
+                    break;
+                }
+            }
+            
+            if (orderOttoCorrect) {
+                score++;
+                feedbackOtto.className = 'feedback correct';
+                feedbackOtto.textContent = '✅ Ordine corretto!';
+                feedbackOtto.style.display = 'block';
+            } else {
+                feedbackOtto.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                feedbackOtto.textContent = '❌ Ordine errato. Ordine corretto: Aspirazione → Compressione → Espansione → Scarico';
+                feedbackOtto.style.display = 'block';
+            }
+
+            // Verifica ordine Diesel
+            const sortedItemsDiesel = Array.from(document.getElementById('sortable-diesel').children).map(item => 
+                item.querySelector('span:last-child').textContent
+            );
+            const feedbackDiesel = document.getElementById('feedback-order-diesel');
+            
+            let orderDieselCorrect = true;
+            for (let i = 0; i < sortedItemsDiesel.length; i++) {
+                if (sortedItemsDiesel[i] !== correctAnswers.orderDiesel[i]) {
+                    orderDieselCorrect = false;
+                    break;
+                }
+            }
+            
+            if (orderDieselCorrect) {
+                score++;
+                feedbackDiesel.className = 'feedback correct';
+                feedbackDiesel.textContent = '✅ Ordine corretto!';
+                feedbackDiesel.style.display = 'block';
+            } else {
+                feedbackDiesel.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                feedbackDiesel.textContent = '❌ Ordine errato. Ordine corretto: Aspirazione → Compressione → Espansione → Scarico';
+                feedbackDiesel.style.display = 'block';
+            }
+
+            // Verifica associazioni tipologie
+            for (let i = 5; i <= 7; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                const feedback = document.getElementById(`feedback-match${i}`);
+                
+                if (selected) {
+                    if (selected === correctAnswers[`match${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Mostra risultato
+            const percentage = ((score / total) * 100).toFixed(1);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                🎯 Punteggio: ${score}/${total} (${percentage}%)
+                <br>
+                ${percentage >= 90 ? '🏆 Eccellente!' : 
+                  percentage >= 75 ? '👍 Buono!' : 
+                  percentage >= 60 ? '📚 Sufficiente' : 
+                  '📖 Da ripassare'}
+            `;
+            resultDiv.style.display = 'block';
+            
+            // Scroll al risultato
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

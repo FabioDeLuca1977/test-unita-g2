@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Unità G2 - TURBINA A VAPORE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #8e2de2;
+        }
+
+        .header h1 {
+            color: #8e2de2;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #4a00e0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #8e2de2;
+        }
+
+        .section-title {
+            color: #6a24b8;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #8e2de2;
+            background: #f3e8ff;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tf-button {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .tf-button:hover {
+            border-color: #8e2de2;
+            background: #f3e8ff;
+        }
+
+        .tf-button.selected {
+            background: #8e2de2;
+            color: white;
+            border-color: #8e2de2;
+        }
+
+        .sortable-list {
+            min-height: 50px;
+        }
+
+        .sortable-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sortable-item:hover {
+            border-color: #8e2de2;
+            box-shadow: 0 4px 12px rgba(142, 45, 226, 0.3);
+        }
+
+        .sortable-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drag-handle {
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(142, 45, 226, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(142, 45, 226, 0.6);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .instruction {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-style: italic;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #8e2de2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧭 TEST UNITÀ G2 – SEZIONE 5</h1>
+            <div class="subtitle">🌪️ TURBINA A VAPORE</div>
+        </div>
+
+        <!-- PARTE 1: SCELTA MULTIPLA -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 1 – Scelta multipla (una sola risposta corretta)</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ La turbina a vapore è installata:</div>
+                <label class="option">
+                    <input type="radio" name="q1" value="a" onchange="checkQuestion('q1')">
+                    Nelle centrali termoelettriche e su grandi navi per mantenere in rotazione alternatori o eliche
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="b" onchange="checkQuestion('q1')">
+                    Nelle centrali idroelettriche per azionare pompe
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="c" onchange="checkQuestion('q1')">
+                    Nei mulini a vento per sfruttare l'aria
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="d" onchange="checkQuestion('q1')">
+                    Nei motori a scoppio per aumentare la compressione
+                </label>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ La turbina a vapore funziona con:</div>
+                <label class="option">
+                    <input type="radio" name="q2" value="a" onchange="checkQuestion('q2')">
+                    Vapore ad alta pressione, circa 500 atmosfere
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="b" onchange="checkQuestion('q2')">
+                    Acqua ad alta temperatura
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="c" onchange="checkQuestion('q2')">
+                    Aria compressa
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="d" onchange="checkQuestion('q2')">
+                    Gas surriscaldati del motore a scoppio
+                </label>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ La turbina a vapore è:</div>
+                <label class="option">
+                    <input type="radio" name="q3" value="a" onchange="checkQuestion('q3')">
+                    Il motore più potente, capace di produrre oltre 1500 MW in alcune centrali
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="b" onchange="checkQuestion('q3')">
+                    Il motore più piccolo, usato per impianti domestici
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="c" onchange="checkQuestion('q3')">
+                    Un motore privo di rotore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="d" onchange="checkQuestion('q3')">
+                    Una macchina operatrice e non motrice
+                </label>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Ogni turbina a vapore è composta da:</div>
+                <label class="option">
+                    <input type="radio" name="q4" value="a" onchange="checkQuestion('q4')">
+                    Statore e rotore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="b" onchange="checkQuestion('q4')">
+                    Caldaia e condensatore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="c" onchange="checkQuestion('q4')">
+                    Biella e manovella
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="d" onchange="checkQuestion('q4')">
+                    Volano e cilindro
+                </label>
+                <div class="feedback" id="feedback-q4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Lo statore è formato da:</div>
+                <label class="option">
+                    <input type="radio" name="q5" value="a" onchange="checkQuestion('q5')">
+                    Anelli fissi con molti ugelli da cui esce il vapore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="b" onchange="checkQuestion('q5')">
+                    Ruote mobili con palette
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="c" onchange="checkQuestion('q5')">
+                    Un disco con cucchiai
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="d" onchange="checkQuestion('q5')">
+                    L'albero di trasmissione
+                </label>
+                <div class="feedback" id="feedback-q5"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6️⃣ Il rotore è formato da:</div>
+                <label class="option">
+                    <input type="radio" name="q6" value="a" onchange="checkQuestion('q6')">
+                    Ruote affiancate con palette che girano
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="b" onchange="checkQuestion('q6')">
+                    Anelli fissi con ugelli
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="c" onchange="checkQuestion('q6')">
+                    Stantuffi e bielle
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="d" onchange="checkQuestion('q6')">
+                    Distributori d'acqua
+                </label>
+                <div class="feedback" id="feedback-q6"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 2: VERO O FALSO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 2 – Vero o Falso</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ A ogni anello dello statore corrisponde una ruota del rotore.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf1', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf1', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf1" value="">
+                <div class="feedback" id="feedback-tf1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Una coppia anello–ruota si chiama "stadio".</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf2', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf2', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf2" value="">
+                <div class="feedback" id="feedback-tf2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il vapore passa prima negli stadi di bassa pressione e poi in quelli di alta.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf3', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf3', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf3" value="">
+                <div class="feedback" id="feedback-tf3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Le palette degli stadi di bassa pressione sono più grandi.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf4', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf4', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf4" value="">
+                <div class="feedback" id="feedback-tf4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Il vapore ad alta pressione entra nella turbina attraverso gli ugelli del secondo stadio.</div>
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf5', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf5', 'falso')">❌ FALSO</div>
+                </div>
+                <input type="hidden" id="tf5" value="">
+                <div class="feedback" id="feedback-tf5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 3: ASSOCIAZIONI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 3 – Associazioni</div>
+            <div class="instruction">Collega ciascun componente alla sua funzione</div>
+            
+            <div class="question">
+                <div class="question-text">Statore →</div>
+                <select id="match1">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Rotore →</div>
+                <select id="match2">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Stadio →</div>
+                <select id="match3">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Albero →</div>
+                <select id="match4">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Ugelli →</div>
+                <select id="match5">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match5"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Palette →</div>
+                <select id="match6">
+                    <option value="">-- Seleziona la funzione --</option>
+                    <option value="statore">🔵 Anelli fissi con ugelli da cui esce vapore</option>
+                    <option value="rotore">🌀 Ruote mobili con palette che girano</option>
+                    <option value="stadio">⚙️ Coppia anello–ruota dove avviene un passaggio di energia</option>
+                    <option value="albero">🔩 Sostiene le ruote del rotore e trasmette il movimento</option>
+                    <option value="ugelli">🚿 Convogliano il vapore ad alta velocità sulle palette</option>
+                    <option value="palette">🔁 Ricevono la spinta del vapore e mettono in rotazione la ruota</option>
+                </select>
+                <div class="feedback" id="feedback-match6"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 4: METTI IN ORDINE -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
+            <div class="instruction">Ordina il percorso del vapore nella turbina. Trascina gli elementi per riordinarli.</div>
+            
+            <div class="question">
+                <div class="sortable-list" id="sortable">
+                    <div class="sortable-item" draggable="true" data-id="1">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Colpisce le palette successive</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="2">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Passa negli ugelli del primo anello dello statore</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="3">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Esce raffreddato</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="4">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Entra negli stadi di bassa pressione</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="5">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Il vapore ad alta pressione entra nella turbina</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="6">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Colpisce le palette della prima ruota del rotore</span>
+                    </div>
+                    <div class="sortable-item" draggable="true" data-id="7">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span>Prosegue negli ugelli del secondo stadio</span>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-order"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 5: SCELTA MULTIPLA DI APPROFONDIMENTO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 5 – Scelta multipla di approfondimento</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Gli stadi di alta pressione:</div>
+                <label class="option">
+                    <input type="radio" name="q7" value="a" onchange="checkQuestion('q7')">
+                    Ricevono il vapore direttamente dalla caldaia
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="b" onchange="checkQuestion('q7')">
+                    Ricevono vapore già raffreddato
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="c" onchange="checkQuestion('q7')">
+                    Hanno palette più grandi
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="d" onchange="checkQuestion('q7')">
+                    Sono usati solo nelle navi
+                </label>
+                <div class="feedback" id="feedback-q7"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Gli stadi di bassa pressione hanno palette:</div>
+                <label class="option">
+                    <input type="radio" name="q8" value="a" onchange="checkQuestion('q8')">
+                    Più grandi, perché il vapore è meno caldo e meno potente
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="b" onchange="checkQuestion('q8')">
+                    Più piccole, per aumentare la velocità
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="c" onchange="checkQuestion('q8')">
+                    Uguali a quelle di alta pressione
+                </label>
+                <label class="option">
+                    <input type="radio" name="q8" value="d" onchange="checkQuestion('q8')">
+                    Di forma cilindrica
+                </label>
+                <div class="feedback" id="feedback-q8"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il vapore in uscita dagli stadi di alta pressione:</div>
+                <label class="option">
+                    <input type="radio" name="q9" value="a" onchange="checkQuestion('q9')">
+                    Entra negli stadi di bassa pressione dopo essersi raffreddato
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="b" onchange="checkQuestion('q9')">
+                    Torna nella caldaia
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="c" onchange="checkQuestion('q9')">
+                    Si disperde nell'atmosfera
+                </label>
+                <label class="option">
+                    <input type="radio" name="q9" value="d" onchange="checkQuestion('q9')">
+                    Si trasforma in aria compressa
+                </label>
+                <div class="feedback" id="feedback-q9"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Gli ugelli del primo stadio hanno il compito di:</div>
+                <label class="option">
+                    <input type="radio" name="q10" value="a" onchange="checkQuestion('q10')">
+                    Accelerare il vapore riducendo la sezione di uscita
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="b" onchange="checkQuestion('q10')">
+                    Far girare direttamente l'albero
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="c" onchange="checkQuestion('q10')">
+                    Raffreddare il vapore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q10" value="d" onchange="checkQuestion('q10')">
+                    Bloccare il flusso in uscita
+                </label>
+                <div class="feedback" id="feedback-q10"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ La turbina a vapore viene usata anche:</div>
+                <label class="option">
+                    <input type="radio" name="q11" value="a" onchange="checkQuestion('q11')">
+                    Sulle grandi navi per far girare le eliche
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="b" onchange="checkQuestion('q11')">
+                    Nei mulini per macinare
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="c" onchange="checkQuestion('q11')">
+                    Nei motori a benzina per la combustione
+                </label>
+                <label class="option">
+                    <input type="radio" name="q11" value="d" onchange="checkQuestion('q11')">
+                    Nei frigoriferi per generare freddo
+                </label>
+                <div class="feedback" id="feedback-q11"></div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="showFinalScore()">📝 MOSTRA PUNTEGGIO FINALE</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Risposte corrette
+        const correctAnswers = {
+            q1: 'a',
+            q2: 'a',
+            q3: 'a',
+            q4: 'a',
+            q5: 'a',
+            q6: 'a',
+            tf1: 'vero',
+            tf2: 'vero',
+            tf3: 'falso',
+            tf4: 'vero',
+            tf5: 'falso',
+            match1: 'statore',
+            match2: 'rotore',
+            match3: 'stadio',
+            match4: 'albero',
+            match5: 'ugelli',
+            match6: 'palette',
+            order: [
+                'Il vapore ad alta pressione entra nella turbina',
+                'Passa negli ugelli del primo anello dello statore',
+                'Colpisce le palette della prima ruota del rotore',
+                'Prosegue negli ugelli del secondo stadio',
+                'Colpisce le palette successive',
+                'Entra negli stadi di bassa pressione',
+                'Esce raffreddato'
+            ],
+            q7: 'a',
+            q8: 'a',
+            q9: 'a',
+            q10: 'a',
+            q11: 'a'
+        };
+
+
+            // Verifica scelta multipla (Parte 1 e 5)
+            for (let i = 1; i <= 11; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                
+                if (selected) {
+                    if (selected.value === correctAnswers[`q${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica Vero/Falso
+            for (let i = 1; i <= 5; i++) {
+                const answer = document.getElementById(`tf${i}`).value;
+                const feedback = document.getElementById(`feedback-tf${i}`);
+                
+                if (answer) {
+                    if (answer === correctAnswers[`tf${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica associazioni
+            for (let i = 1; i <= 6; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                const feedback = document.getElementById(`feedback-match${i}`);
+                
+                if (selected) {
+                    if (selected === correctAnswers[`match${i}`]) {
+                        score++;
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = '✅ Corretto!';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                        feedback.textContent = '❌ Risposta errata';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
+                    feedback.style.display = 'block';
+                }
+            }
+
+            // Verifica ordine
+            const sortedItems = Array.from(sortableList.children).map(item => 
+                item.querySelector('span:last-child').textContent
+            );
+            const feedback = document.getElementById('feedback-order');
+            
+            let orderCorrect = true;
+            for (let i = 0; i < sortedItems.length; i++) {
+                if (sortedItems[i] !== correctAnswers.order[i]) {
+                    orderCorrect = false;
+                    break;
+                }
+            }
+            
+            if (orderCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✅ Ordine corretto!';
+                feedback.style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
+                feedback.textContent = '❌ Ordine errato. Ordine corretto: Vapore entra → Ugelli 1° anello → Palette 1ª ruota → Ugelli 2° stadio → Palette successive → Stadi bassa pressione → Esce raffreddato';
+                feedback.style.display = 'block';
+            }
+
+            // Mostra risultato
+            const percentage = ((score / total) * 100).toFixed(1);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                🎯 Punteggio: ${score}/${total} (${percentage}%)
+                <br>
+                ${percentage >= 90 ? '🏆 Eccellente!' : 
+                  percentage >= 75 ? '👍 Buono!' : 
+                  percentage >= 60 ? '📚 Sufficiente' : 
+                  '📖 Da ripassare'}
+            `;
+            resultDiv.style.display = 'block';
+            
+            // Scroll al risultato
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

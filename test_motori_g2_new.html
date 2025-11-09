@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Unità G2 - MOTORI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section-title {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tf-button {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .tf-button:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .tf-button.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .match-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .match-item {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .sortable-list {
+            min-height: 50px;
+        }
+
+        .sortable-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sortable-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .sortable-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drag-handle {
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .verify-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 0.95em;
+            font-weight: normal;
+            line-height: 1.5;
+        }
+
+        .instruction {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #1565c0;
+            font-style: italic;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            background: white;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .match-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ TEST UNITÀ G2 - MOTORI</h1>
+            <p style="color: #666; margin-top: 10px;">Introduzione ai Motori Primi e Fluidi di Lavoro</p>
+        </div>
+
+        <!-- PARTE 1: COSA SONO I MOTORI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 1 – Scelta multipla "Cosa sono i motori"</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ Cosa sono i motori primi?</div>
+                <label class="option">
+                    <input type="radio" name="q1" value="a" onchange="checkQuestion('q1')">
+                    Dispositivi che trasmettono energia
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="b" onchange="checkQuestion('q1')">
+                    Motori di piccole dimensioni
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="c" onchange="checkQuestion('q1')">
+                    Macchine che trasformano forme diverse di energia in energia meccanica
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="d" onchange="checkQuestion('q1')">
+                    Strumenti per misurare la potenza
+                </label>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Quale tra questi è un motore primo?</div>
+                <label class="option">
+                    <input type="radio" name="q2" value="a" onchange="checkQuestion('q2')">
+                    Motore a scoppio dell'auto
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="b" onchange="checkQuestion('q2')">
+                    Dinamo di una bicicletta
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="c" onchange="checkQuestion('q2')">
+                    Alternatore di un'auto
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="d" onchange="checkQuestion('q2')">
+                    Trasformatore elettrico
+                </label>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Qual è la funzione principale di un motore primo?</div>
+                <label class="option">
+                    <input type="radio" name="q3" value="a" onchange="checkQuestion('q3')">
+                    Generare elettricità
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="b" onchange="checkQuestion('q3')">
+                    Misurare la temperatura
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="c" onchange="checkQuestion('q3')">
+                    Produrre movimento e lavoro meccanico
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="d" onchange="checkQuestion('q3')">
+                    Raffreddare il sistema
+                </label>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Il fluido di lavoro di un mulino ad acqua è:</div>
+                <label class="option">
+                    <input type="radio" name="q4" value="a" onchange="checkQuestion('q4')">
+                    L'acqua corrente
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="b" onchange="checkQuestion('q4')">
+                    Il vapore
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="c" onchange="checkQuestion('q4')">
+                    Il gas
+                </label>
+                <label class="option">
+                    <input type="radio" name="q4" value="d" onchange="checkQuestion('q4')">
+                    L'elettricità
+                </label>
+                <div class="feedback" id="feedback-q4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Il fluido di lavoro di un motore a scoppio è:</div>
+                <label class="option">
+                    <input type="radio" name="q5" value="a" onchange="checkQuestion('q5')">
+                    Una miscela di aria e carburante
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="b" onchange="checkQuestion('q5')">
+                    Solo benzina
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="c" onchange="checkQuestion('q5')">
+                    Solo aria
+                </label>
+                <label class="option">
+                    <input type="radio" name="q5" value="d" onchange="checkQuestion('q5')">
+                    Acqua calda
+                </label>
+                <div class="feedback" id="feedback-q5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 2: VERO O FALSO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 2 – Vero o Falso</div>
+
+            <div class="question">
+                <div class="question-text">1️⃣ I motori trasformano l'energia meccanica in energia termica</div>
+                <input type="hidden" id="tf1" value="">
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf1', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf1', 'falso')">❌ FALSO</div>
+                </div>
+                <div class="feedback" id="feedback-tf1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Il mulino a vento utilizza l'aria in movimento come fluido di lavoro</div>
+                <input type="hidden" id="tf2" value="">
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf2', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf2', 'falso')">❌ FALSO</div>
+                </div>
+                <div class="feedback" id="feedback-tf2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Il vapore è un fluido di lavoro creato artificialmente dall'uomo</div>
+                <input type="hidden" id="tf3" value="">
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf3', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf3', 'falso')">❌ FALSO</div>
+                </div>
+                <div class="feedback" id="feedback-tf3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ I motori primi possono funzionare solo con fluidi naturali</div>
+                <input type="hidden" id="tf4" value="">
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf4', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf4', 'falso')">❌ FALSO</div>
+                </div>
+                <div class="feedback" id="feedback-tf4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Tutti i motori producono elettricità come risultato principale</div>
+                <input type="hidden" id="tf5" value="">
+                <div class="tf-buttons">
+                    <div class="tf-button" onclick="selectTF('tf5', 'vero')">✅ VERO</div>
+                    <div class="tf-button" onclick="selectTF('tf5', 'falso')">❌ FALSO</div>
+                </div>
+                <div class="feedback" id="feedback-tf5"></div>
+            </div>
+        </div>
+
+        <!-- PARTE 3: ASSOCIAZIONI -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 3 – Associazioni "Motori e fluidi di lavoro"</div>
+            <div class="instruction">
+                💡 Seleziona dal menu a tendina il fluido di lavoro corretto per ogni motore
+            </div>
+
+            <div class="question">
+                <div class="question-text">1️⃣ Mulino ad acqua →</div>
+                <select id="match1">
+                    <option value="">Seleziona...</option>
+                    <option value="acqua_corrente">Acqua corrente</option>
+                    <option value="aria">Aria in movimento</option>
+                    <option value="vapore">Vapore sotto pressione</option>
+                    <option value="gas">Gas combusti</option>
+                    <option value="acqua_pressione">Acqua sotto pressione</option>
+                </select>
+                <div class="feedback" id="feedback-match1"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Mulino a vento →</div>
+                <select id="match2">
+                    <option value="">Seleziona...</option>
+                    <option value="acqua_corrente">Acqua corrente</option>
+                    <option value="aria">Aria in movimento</option>
+                    <option value="vapore">Vapore sotto pressione</option>
+                    <option value="gas">Gas combusti</option>
+                    <option value="acqua_pressione">Acqua sotto pressione</option>
+                </select>
+                <div class="feedback" id="feedback-match2"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3️⃣ Motore a vapore →</div>
+                <select id="match3">
+                    <option value="">Seleziona...</option>
+                    <option value="acqua_corrente">Acqua corrente</option>
+                    <option value="aria">Aria in movimento</option>
+                    <option value="vapore">Vapore sotto pressione</option>
+                    <option value="gas">Gas combusti</option>
+                    <option value="acqua_pressione">Acqua sotto pressione</option>
+                </select>
+                <div class="feedback" id="feedback-match3"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4️⃣ Motore a scoppio →</div>
+                <select id="match4">
+                    <option value="">Seleziona...</option>
+                    <option value="acqua_corrente">Acqua corrente</option>
+                    <option value="aria">Aria in movimento</option>
+                    <option value="vapore">Vapore sotto pressione</option>
+                    <option value="gas">Gas combusti</option>
+                    <option value="acqua_pressione">Acqua sotto pressione</option>
+                </select>
+                <div class="feedback" id="feedback-match4"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5️⃣ Turbina idraulica →</div>
+                <select id="match5">
+                    <option value="">Seleziona...</option>
+                    <option value="acqua_corrente">Acqua corrente</option>
+                    <option value="aria">Aria in movimento</option>
+                    <option value="vapore">Vapore sotto pressione</option>
+                    <option value="gas">Gas combusti</option>
+                    <option value="acqua_pressione">Acqua sotto pressione</option>
+                </select>
+                <div class="feedback" id="feedback-match5"></div>
+            </div>
+
+            <button class="verify-btn" onclick="checkMatches()">✓ Verifica Associazioni</button>
+        </div>
+
+        <!-- PARTE 4: ORDINAMENTO DRAG & DROP -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 4 – Ordinamento Drag & Drop "Componenti Motore a Vapore"</div>
+            <div class="instruction">
+                💡 Trascina gli elementi per metterli nell'ordine corretto del flusso di energia
+            </div>
+
+            <div class="sortable-list" id="sortable">
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Volano</span>
+                </div>
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Biella-manovella</span>
+                </div>
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Cilindro</span>
+                </div>
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Stantuffo</span>
+                </div>
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Caldaia</span>
+                </div>
+                <div class="sortable-item" draggable="true">
+                    <span class="drag-handle">☰</span>
+                    <span>Cassetto di distribuzione</span>
+                </div>
+            </div>
+            <div class="feedback" id="feedback-order"></div>
+            <button class="verify-btn" onclick="checkOrder()">✓ Verifica Ordine</button>
+        </div>
+
+        <!-- PARTE 5: FLUIDI DI LAVORO -->
+        <div class="section">
+            <div class="section-title">🔹 Parte 5 – Scelta multipla "Fluidi di lavoro"</div>
+            
+            <div class="question">
+                <div class="question-text">1️⃣ I fluidi di lavoro sono:</div>
+                <label class="option">
+                    <input type="radio" name="q6" value="a" onchange="checkQuestion('q6')">
+                    Sostanze liquide o gassose dotate di energia che fanno funzionare i motori
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="b" onchange="checkQuestion('q6')">
+                    Solidi metallici che formano i motori
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="c" onchange="checkQuestion('q6')">
+                    Solo liquidi a temperatura ambiente
+                </label>
+                <label class="option">
+                    <input type="radio" name="q6" value="d" onchange="checkQuestion('q6')">
+                    Solo gas compressi
+                </label>
+                <div class="feedback" id="feedback-q6"></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2️⃣ Tra i seguenti, qual è un fluido creato dall'uomo?</div>
+                <label class="option">
+                    <input type="radio" name="q7" value="a" onchange="checkQuestion('q7')">
+                    Vento
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="b" onchange="checkQuestion('q7')">
+                    Acqua di fiume
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="c" onchange="checkQuestion('q7')">
+                    Vapore in pressione
+                </label>
+                <label class="option">
+                    <input type="radio" name="q7" value="d" onchange="checkQuestion('q7')">
+                    Aria atmosferica
+                </label>
+                <div class="feedback" id="feedback-q7"></div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="showFinalScore()">📊 MOSTRA PUNTEGGIO FINALE</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Risposte corrette con spiegazioni
+        const correctAnswers = {
+            q1: {
+                answer: 'c',
+                explanation: 'I motori primi sono macchine che convertono varie forme di energia (termica, idraulica, eolica) in energia meccanica utilizzabile.'
+            },
+            q2: {
+                answer: 'a',
+                explanation: 'Il motore a scoppio trasforma l\'energia chimica del carburante in energia meccanica. Gli altri sono dispositivi che trasformano energia meccanica in elettrica.'
+            },
+            q3: {
+                answer: 'c',
+                explanation: 'La funzione principale di un motore primo è trasformare energia di vario tipo in movimento e lavoro meccanico utile.'
+            },
+            q4: {
+                answer: 'a',
+                explanation: 'Il mulino ad acqua sfrutta l\'energia cinetica dell\'acqua corrente (di un fiume o canale) per muovere le sue pale.'
+            },
+            q5: {
+                answer: 'a',
+                explanation: 'Il motore a scoppio funziona con una miscela di aria e carburante che viene compressa e poi accesa nel cilindro.'
+            },
+            tf1: {
+                answer: 'falso',
+                explanation: 'I motori primi trasformano energia termica, idraulica o di altro tipo IN energia meccanica, non il contrario.'
+            },
+            tf2: {
+                answer: 'vero',
+                explanation: 'Il mulino a vento sfrutta l\'energia cinetica del vento (aria in movimento) per produrre lavoro meccanico.'
+            },
+            tf3: {
+                answer: 'vero',
+                explanation: 'Il vapore sotto pressione è prodotto dall\'uomo riscaldando acqua in una caldaia, non esiste in natura in questa forma.'
+            },
+            tf4: {
+                answer: 'falso',
+                explanation: 'I motori primi possono funzionare sia con fluidi naturali (acqua, vento) che artificiali (vapore, gas di combustione).'
+            },
+            tf5: {
+                answer: 'falso',
+                explanation: 'I motori primi producono principalmente energia meccanica (movimento). L\'elettricità è prodotta da generatori collegati ai motori.'
+            },
+            match1: {
+                answer: 'acqua_corrente',
+                explanation: 'Il mulino ad acqua utilizza l\'energia dell\'acqua che scorre (acqua corrente) per far girare la ruota idraulica.'
+            },
+            match2: {
+                answer: 'aria',
+                explanation: 'Il mulino a vento sfrutta l\'aria in movimento (vento) che colpisce le pale e le fa girare.'
+            },
+            match3: {
+                answer: 'vapore',
+                explanation: 'Il motore a vapore funziona con vapore ad alta pressione prodotto dalla caldaia.'
+            },
+            match4: {
+                answer: 'gas',
+                explanation: 'Il motore a scoppio utilizza i gas ad alta pressione prodotti dalla combustione della miscela aria-carburante.'
+            },
+            match5: {
+                answer: 'acqua_pressione',
+                explanation: 'La turbina idraulica sfrutta acqua sotto pressione che viene convogliata attraverso condotte forzate.'
+            },
+            order: {
+                answer: ['Caldaia', 'Cassetto di distribuzione', 'Cilindro', 'Stantuffo', 'Biella-manovella', 'Volano'],
+                explanation: 'Questo è l\'ordine corretto del flusso di energia: la Caldaia produce vapore → il Cassetto di distribuzione lo regola → entra nel Cilindro → spinge lo Stantuffo → che tramite Biella-manovella → fa girare il Volano.'
+            }
+        };
+
+        let score = 0;
+        let answeredQuestions = new Set();
+
+        // Funzione per verificare domande a scelta multipla
+        function checkQuestion(questionId) {
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedback = document.getElementById(`feedback-${questionId}`);
+            
+            if (!selected) return;
+            
+            const isCorrect = selected.value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Gestione Vero/Falso con feedback immediato
+        function selectTF(id, value) {
+            document.getElementById(id).value = value;
+            const buttons = event.target.parentElement.querySelectorAll('.tf-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Verifica immediata
+            const questionId = id;
+            const feedback = document.getElementById(`feedback-${questionId}`);
+            const isCorrect = value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Verifica associazioni
+        function checkMatches() {
+            for (let i = 1; i <= 5; i++) {
+                const selected = document.getElementById(`match${i}`).value;
+                const feedback = document.getElementById(`feedback-match${i}`);
+                const questionId = `match${i}`;
+                
+                if (!selected) {
+                    feedback.className = 'feedback incorrect';
+                    feedback.innerHTML = '⚠️ <strong>Nessuna risposta selezionata</strong>';
+                    continue;
+                }
+                
+                const isCorrect = selected === correctAnswers[questionId].answer;
+                
+                if (isCorrect) {
+                    feedback.className = 'feedback correct';
+                    feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                        <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                    if (!answeredQuestions.has(questionId)) {
+                        score++;
+                        answeredQuestions.add(questionId);
+                    }
+                } else {
+                    feedback.className = 'feedback incorrect';
+                    feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                        <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                    if (!answeredQuestions.has(questionId)) {
+                        answeredQuestions.add(questionId);
+                    }
+                }
+            }
+        }
+
+        // Gestione Drag & Drop per ordinamento
+        let draggedElement = null;
+        const sortableList = document.getElementById('sortable');
+        const sortableItems = sortableList.querySelectorAll('.sortable-item');
+
+        sortableItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                setTimeout(() => this.classList.add('dragging'), 0);
+            });
+
+            item.addEventListener('dragend', function() {
+                setTimeout(() => this.classList.remove('dragging'), 0);
+                draggedElement = null;
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(sortableList, e.clientY);
+                if (afterElement == null) {
+                    sortableList.appendChild(draggedElement);
+                } else {
+                    sortableList.insertBefore(draggedElement, afterElement);
+                }
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Verifica ordine
+        function checkOrder() {
+            const sortedItems = Array.from(sortableList.children).map(item => 
+                item.querySelector('span:last-child').textContent
+            );
+            const feedback = document.getElementById('feedback-order');
+            const questionId = 'order';
+            
+            let orderCorrect = true;
+            for (let i = 0; i < sortedItems.length; i++) {
+                if (sortedItems[i] !== correctAnswers.order.answer[i]) {
+                    orderCorrect = false;
+                    break;
+                }
+            }
+            
+            if (orderCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Ordine corretto!</strong>
+                    <div class="explanation">${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Ordine errato</strong>
+                    <div class="explanation"><strong>Ordine corretto:</strong> ${correctAnswers.order.answer.join(' → ')}<br><br>${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Mostra punteggio finale
+        function showFinalScore() {
+            const total = 17; // Totale domande
+            const percentage = ((score / total) * 100).toFixed(1);
+            const resultDiv = document.getElementById('result');
+            
+            let emoji = '';
+            let message = '';
+            
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'Eccellente! Ottima conoscenza!';
+            } else if (percentage >= 75) {
+                emoji = '👍';
+                message = 'Buono! Continua così!';
+            } else if (percentage >= 60) {
+                emoji = '📚';
+                message = 'Sufficiente. Ripassa alcuni concetti.';
+            } else {
+                emoji = '📖';
+                message = 'Da ripassare. Studia ancora un po\'.';
+            }
+            
+            resultDiv.innerHTML = `
+                ${emoji} <strong>PUNTEGGIO FINALE</strong><br>
+                <div style="font-size: 2em; margin: 15px 0;">${score}/${total}</div>
+                <div style="font-size: 1.5em;">${percentage}%</div>
+                <div style="font-size: 1em; margin-top: 10px; opacity: 0.95;">${message}</div>
+            `;
+            resultDiv.style.display = 'block';
+            
+            // Scroll al risultato
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>
