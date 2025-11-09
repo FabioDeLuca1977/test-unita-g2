@@ -127,37 +127,6 @@
             border-color: #ee0979;
         }
 
-        .sortable-list {
-            min-height: 50px;
-        }
-
-        .sortable-item {
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: move;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sortable-item:hover {
-            border-color: #ee0979;
-            box-shadow: 0 4px 12px rgba(238, 9, 121, 0.3);
-        }
-
-        .sortable-item.dragging {
-            opacity: 0.5;
-        }
-
-        .drag-handle {
-            font-size: 1.2em;
-            color: #999;
-        }
-
         .submit-btn {
             width: 100%;
             padding: 18px;
@@ -175,6 +144,23 @@
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(238, 9, 121, 0.6);
+        }
+
+        .verify-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(238, 9, 121, 0.4);
         }
 
         .result {
@@ -202,13 +188,21 @@
             background: #d4edda;
             color: #155724;
             border: 2px solid #c3e6cb;
+            display: block;
         }
 
         .feedback.incorrect {
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
             background: #f8d7da;
             color: #721c24;
             border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 0.95em;
+            font-weight: normal;
+            line-height: 1.5;
         }
 
         .instruction {
@@ -233,6 +227,76 @@
         select:focus {
             outline: none;
             border-color: #ee0979;
+        }
+
+        .order-list {
+            padding: 0;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            gap: 10px;
+        }
+
+        .order-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .arrow-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ee0979;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .arrow-btn:hover {
+            background: #ee0979;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .arrow-btn:active {
+            transform: scale(0.95);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .order-text {
+            flex: 1;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+
+        .order-number {
+            background: #ee0979;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
         }
     </style>
 </head>
@@ -478,7 +542,7 @@
             
             <div class="question">
                 <div class="question-text">Caldaia →</div>
-                <select id="match1">
+                <select id="match1" onchange="checkMatch('match1')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -494,7 +558,7 @@
 
             <div class="question">
                 <div class="question-text">Cassetto di distribuzione →</div>
-                <select id="match2">
+                <select id="match2" onchange="checkMatch('match2')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -510,7 +574,7 @@
 
             <div class="question">
                 <div class="question-text">Cilindro →</div>
-                <select id="match3">
+                <select id="match3" onchange="checkMatch('match3')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -526,7 +590,7 @@
 
             <div class="question">
                 <div class="question-text">Stantuffo →</div>
-                <select id="match4">
+                <select id="match4" onchange="checkMatch('match4')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -542,7 +606,7 @@
 
             <div class="question">
                 <div class="question-text">Biella →</div>
-                <select id="match5">
+                <select id="match5" onchange="checkMatch('match5')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -558,7 +622,7 @@
 
             <div class="question">
                 <div class="question-text">Manovella →</div>
-                <select id="match6">
+                <select id="match6" onchange="checkMatch('match6')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -574,7 +638,7 @@
 
             <div class="question">
                 <div class="question-text">Volano →</div>
-                <select id="match7">
+                <select id="match7" onchange="checkMatch('match7')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -590,7 +654,7 @@
 
             <div class="question">
                 <div class="question-text">Azionatore del cassetto →</div>
-                <select id="match8">
+                <select id="match8" onchange="checkMatch('match8')">
                     <option value="">-- Seleziona la funzione --</option>
                     <option value="caldaia">♨️ Produce il vapore ad alta pressione</option>
                     <option value="cassetto">🔄 Apre e chiude le luci del vapore</option>
@@ -605,47 +669,15 @@
             </div>
         </div>
 
-        <!-- PARTE 4: METTI IN ORDINE -->
+        <!-- PARTE 4: ORDINAMENTO CON FRECCE -->
         <div class="section">
             <div class="section-title">🔹 Parte 4 – Metti in ordine</div>
-            <div class="instruction">Ordina le fasi del funzionamento del motore a vapore (un ciclo completo). Trascina gli elementi per riordinarli.</div>
+            <div class="instruction">💡 Usa le frecce ↑ ↓ per ordinare le fasi del funzionamento del motore a vapore (un ciclo completo)</div>
             
             <div class="question">
-                <div class="sortable-list" id="sortable">
-                    <div class="sortable-item" draggable="true" data-id="1">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>La biella muove la manovella</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="2">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Il volano continua la rotazione per inerzia</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="3">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Il vapore entra nel motore ad alta pressione</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="4">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Lo stantuffo viene spinto verso sinistra</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="5">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>L'azionatore apre la luce sinistra</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="6">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Il cassetto apre la luce destra</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="7">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Il vapore esausto esce dal cilindro</span>
-                    </div>
-                    <div class="sortable-item" draggable="true" data-id="8">
-                        <span class="drag-handle">⋮⋮</span>
-                        <span>Lo stantuffo si muove verso destra</span>
-                    </div>
-                </div>
+                <div class="order-list" id="orderList"></div>
                 <div class="feedback" id="feedback-order"></div>
+                <button class="verify-btn" onclick="checkOrder()">✓ Verifica Ordine</button>
             </div>
         </div>
 
@@ -744,157 +776,327 @@
     </div>
 
     <script>
-        // Risposte corrette
+        // Risposte corrette con spiegazioni
         const correctAnswers = {
-            q1: 'a',
-            q2: 'a',
-            q3: 'a',
-            q4: 'a',
-            q5: 'a',
-            q6: 'a',
-            q7: 'a',
-            q8: 'a',
-            tf1: 'vero',
-            tf2: 'vero',
-            tf3: 'falso',
-            tf4: 'vero',
-            tf5: 'falso',
-            match1: 'caldaia',
-            match2: 'cassetto',
-            match3: 'cilindro',
-            match4: 'stantuffo',
-            match5: 'biella',
-            match6: 'manovella',
-            match7: 'volano',
-            match8: 'azionatore',
-            order: [
-                'Il vapore entra nel motore ad alta pressione',
-                'Il cassetto apre la luce destra',
-                'Lo stantuffo viene spinto verso sinistra',
-                'Il vapore esausto esce dal cilindro',
-                'La biella muove la manovella',
-                'Il volano continua la rotazione per inerzia',
-                'L\'azionatore apre la luce sinistra',
-                'Lo stantuffo si muove verso destra'
-            ],
-            q9: 'a',
-            q10: 'a',
-            q11: 'a',
-            q12: 'a'
+            q1: {
+                answer: 'a',
+                explanation: 'La macchina a vapore è considerata il primo motore moderno perché ha segnato l\'inizio della rivoluzione industriale ed era costruita interamente in ferro, a differenza delle macchine precedenti.'
+            },
+            q2: {
+                answer: 'a',
+                explanation: 'Il motore a vapore funziona utilizzando vapore ad alta pressione prodotto in una caldaia che riscalda l\'acqua.'
+            },
+            q3: {
+                answer: 'a',
+                explanation: 'Nell\'Ottocento la macchina a vapore sostituì la ruota idraulica nelle fabbriche, permettendo di localizzare gli impianti ovunque, non solo vicino ai corsi d\'acqua.'
+            },
+            q4: {
+                answer: 'a',
+                explanation: 'Il cassetto di distribuzione è il componente che apre e chiude le luci (aperture) da cui il vapore entra e esce dal cilindro, controllando così il funzionamento del motore.'
+            },
+            q5: {
+                answer: 'a',
+                explanation: 'Lo stantuffo è un pistone che si muove avanti e indietro all\'interno del cilindro, spinto dalla pressione del vapore.'
+            },
+            q6: {
+                answer: 'a',
+                explanation: 'La biella è l\'elemento di collegamento tra lo stantuffo (che si muove in linea retta) e la manovella (che ruota), trasformando il moto rettilineo alternato in moto rotatorio.'
+            },
+            q7: {
+                answer: 'a',
+                explanation: 'Il volano è una ruota pesante che, grazie alla sua inerzia, mantiene il movimento rotatorio anche quando lo stantuffo cambia direzione, garantendo così la continuità del moto.'
+            },
+            q8: {
+                answer: 'a',
+                explanation: 'L\'azionatore del cassetto è collegato all\'albero motore e fa sì che ogni mezzo giro dell\'albero venga aperta la luce opposta, alternando l\'ingresso del vapore sui due lati dello stantuffo.'
+            },
+            tf1: {
+                answer: 'vero',
+                explanation: 'Corretto! Il vapore entra alternativamente dalla luce destra o sinistra del cilindro, spingendo lo stantuffo prima in una direzione e poi nell\'altra.'
+            },
+            tf2: {
+                answer: 'vero',
+                explanation: 'Esatto! Lo stantuffo, spinto dal vapore, trasmette la sua forza alla biella che a sua volta fa ruotare la manovella collegata all\'albero motore.'
+            },
+            tf3: {
+                answer: 'falso',
+                explanation: 'No, il volano NON si ferma. Grazie alla sua massa e inerzia, continua a girare anche quando lo stantuffo cambia direzione, mantenendo uniforme il movimento del motore.'
+            },
+            tf4: {
+                answer: 'vero',
+                explanation: 'Corretto! Il cassetto di distribuzione apre e chiude le luci del cilindro, regolando quando e dove il vapore entra ed esce, controllando così il flusso di vapore nel motore.'
+            },
+            tf5: {
+                answer: 'falso',
+                explanation: 'No, la macchina a vapore funziona con energia termica (calore) che viene convertita in energia meccanica tramite il vapore. L\'energia elettrica è un tipo di energia completamente diverso.'
+            },
+            match1: {
+                answer: 'caldaia',
+                explanation: 'La caldaia è il componente che scalda l\'acqua e produce il vapore ad alta pressione necessario per far funzionare il motore.'
+            },
+            match2: {
+                answer: 'cassetto',
+                explanation: 'Il cassetto di distribuzione è il dispositivo che scorre aprendo e chiudendo le luci (aperture) per far entrare il vapore nel cilindro.'
+            },
+            match3: {
+                answer: 'cilindro',
+                explanation: 'Il cilindro è il contenitore metallico all\'interno del quale si muove lo stantuffo, spinto dalla pressione del vapore.'
+            },
+            match4: {
+                answer: 'stantuffo',
+                explanation: 'Lo stantuffo (o pistone) è il componente che si muove alternativamente dentro il cilindro quando viene spinto dal vapore.'
+            },
+            match5: {
+                answer: 'biella',
+                explanation: 'La biella è l\'asta che collega lo stantuffo alla manovella, trasmettendo il movimento dal primo alla seconda.'
+            },
+            match6: {
+                answer: 'manovella',
+                explanation: 'La manovella è il meccanismo che trasforma il movimento alternato (avanti-indietro) dello stantuffo in movimento rotatorio continuo dell\'albero motore.'
+            },
+            match7: {
+                answer: 'volano',
+                explanation: 'Il volano è la grande ruota pesante che accumula energia cinetica e mantiene il moto per inerzia, rendendo uniforme la rotazione del motore.'
+            },
+            match8: {
+                answer: 'azionatore',
+                explanation: 'L\'azionatore del cassetto è il meccanismo collegato all\'albero motore che fa scorrere il cassetto, cambiando la luce aperta ogni mezzo giro per alternare l\'entrata del vapore.'
+            },
+            order: {
+                answer: [
+                    'Il vapore entra nel motore ad alta pressione',
+                    'Il cassetto apre la luce destra',
+                    'Lo stantuffo viene spinto verso sinistra',
+                    'La biella muove la manovella',
+                    'Il volano continua la rotazione per inerzia',
+                    'L\'azionatore apre la luce sinistra',
+                    'Lo stantuffo si muove verso destra',
+                    'Il vapore esausto esce dal cilindro'
+                ],
+                explanation: 'Questo è il ciclo completo del motore a vapore: il vapore entra ad alta pressione → il cassetto apre la luce destra → lo stantuffo viene spinto verso sinistra → la biella muove la manovella → il volano mantiene la rotazione → l\'azionatore apre la luce sinistra → lo stantuffo torna verso destra → il vapore esausto esce.'
+            },
+            q9: {
+                answer: 'a',
+                explanation: 'La luce destra è l\'apertura sul lato destro del cilindro attraverso cui entra il vapore ad alta pressione per spingere lo stantuffo verso sinistra.'
+            },
+            q10: {
+                answer: 'a',
+                explanation: 'La luce sinistra si apre quando l\'albero motore ha compiuto mezzo giro (180°), grazie all\'azionatore che muove il cassetto di distribuzione in sincronia con la rotazione.'
+            },
+            q11: {
+                answer: 'a',
+                explanation: 'Il vapore esausto è il vapore che ha già ceduto la sua energia spingendo lo stantuffo e quindi esce dal cilindro attraverso le aperture di scarico.'
+            },
+            q12: {
+                answer: 'a',
+                explanation: 'Il cilindro è il contenitore metallico cilindrico all\'interno del quale scorre avanti e indietro lo stantuffo, grazie alla pressione del vapore.'
+            }
         };
 
+        let score = 0;
+        let answeredQuestions = new Set();
 
-            // Verifica scelta multipla (Parte 1 e 5)
-            for (let i = 1; i <= 12; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                const feedback = document.getElementById(`feedback-q${i}`);
-                
-                if (selected) {
-                    if (selected.value === correctAnswers[`q${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica Vero/Falso
-            for (let i = 1; i <= 5; i++) {
-                const answer = document.getElementById(`tf${i}`).value;
-                const feedback = document.getElementById(`feedback-tf${i}`);
-                
-                if (answer) {
-                    if (answer === correctAnswers[`tf${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica associazioni
-            for (let i = 1; i <= 8; i++) {
-                const selected = document.getElementById(`match${i}`).value;
-                const feedback = document.getElementById(`feedback-match${i}`);
-                
-                if (selected) {
-                    if (selected === correctAnswers[`match${i}`]) {
-                        score++;
-                        feedback.className = 'feedback correct';
-                        feedback.textContent = '✅ Corretto!';
-                        feedback.style.display = 'block';
-                    } else {
-                        feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                        feedback.textContent = '❌ Risposta errata';
-                        feedback.style.display = 'block';
-                    }
-                } else {
-                    feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                    feedback.textContent = '⚠️ Nessuna risposta selezionata';
-                    feedback.style.display = 'block';
-                }
-            }
-
-            // Verifica ordine
-            const sortedItems = Array.from(sortableList.children).map(item => 
-                item.querySelector('span:last-child').textContent
-            );
-            const feedback = document.getElementById('feedback-order');
+        // Funzione per verificare domande a scelta multipla
+        function checkQuestion(questionId) {
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedback = document.getElementById(`feedback-${questionId}`);
             
-            let orderCorrect = true;
-            for (let i = 0; i < sortedItems.length; i++) {
-                if (sortedItems[i] !== correctAnswers.order[i]) {
-                    orderCorrect = false;
+            if (!selected) return;
+            
+            const isCorrect = selected.value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Gestione Vero/Falso con feedback immediato
+        function selectTF(id, value) {
+            document.getElementById(id).value = value;
+            const buttons = event.target.parentElement.querySelectorAll('.tf-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Verifica immediata
+            const questionId = id;
+            const feedback = document.getElementById(`feedback-${questionId}`);
+            const isCorrect = value === correctAnswers[questionId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    score++;
+                    answeredQuestions.add(questionId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[questionId].explanation}</div>`;
+                if (!answeredQuestions.has(questionId)) {
+                    answeredQuestions.add(questionId);
+                }
+            }
+        }
+
+        // Verifica associazioni con feedback immediato
+        function checkMatch(matchId) {
+            const selected = document.getElementById(matchId).value;
+            const feedback = document.getElementById(`feedback-${matchId}`);
+            
+            if (!selected) {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '⚠️ <strong>Nessuna risposta selezionata</strong>';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            const isCorrect = selected === correctAnswers[matchId].answer;
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ <strong>Corretto!</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    score++;
+                    answeredQuestions.add(matchId);
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `❌ <strong>Risposta errata</strong>
+                    <div class="explanation">${correctAnswers[matchId].explanation}</div>`;
+                if (!answeredQuestions.has(matchId)) {
+                    answeredQuestions.add(matchId);
+                }
+            }
+        }
+
+        // ========================================
+        // SISTEMA ORDINAMENTO CON FRECCE
+        // ========================================
+        
+        // Elementi da ordinare (ordine casuale iniziale)
+        let orderItems = [
+            'La biella muove la manovella',
+            'Il volano continua la rotazione per inerzia',
+            'Il vapore entra nel motore ad alta pressione',
+            'Lo stantuffo viene spinto verso sinistra',
+            'L\'azionatore apre la luce sinistra',
+            'Il cassetto apre la luce destra',
+            'Il vapore esausto esce dal cilindro',
+            'Lo stantuffo si muove verso destra'
+        ];
+        
+        // Genera la lista
+        function renderOrderList() {
+            const list = document.getElementById('orderList');
+            if (!list) return;
+            
+            list.innerHTML = orderItems.map((item, index) => `
+                <div class="order-item">
+                    <div class="order-number">${index + 1}</div>
+                    <div class="order-buttons">
+                        <button class="arrow-btn" onclick="moveUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="arrow-btn" onclick="moveDown(${index})" ${index === orderItems.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    <div class="order-text">${item}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Sposta su
+        function moveUp(index) {
+            if (index > 0) {
+                [orderItems[index], orderItems[index - 1]] = [orderItems[index - 1], orderItems[index]];
+                renderOrderList();
+            }
+        }
+        
+        // Sposta giù
+        function moveDown(index) {
+            if (index < orderItems.length - 1) {
+                [orderItems[index], orderItems[index + 1]] = [orderItems[index + 1], orderItems[index]];
+                renderOrderList();
+            }
+        }
+        
+        // Verifica ordine con feedback immediato
+        function checkOrder() {
+            const fb = document.getElementById('feedback-order');
+            const correctOrder = correctAnswers.order.answer;
+            let isCorrect = true;
+            
+            for (let i = 0; i < orderItems.length; i++) {
+                if (orderItems[i] !== correctOrder[i]) {
+                    isCorrect = false;
                     break;
                 }
             }
             
-            if (orderCorrect) {
-                score++;
-                feedback.className = 'feedback correct';
-                feedback.textContent = '✅ Ordine corretto!';
-                feedback.style.display = 'block';
+            if (isCorrect) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = `✅ <strong>Ordine corretto!</strong><div class="explanation">${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has('order')) {
+                    score++;
+                    answeredQuestions.add('order');
+                }
             } else {
-                feedback.className = 'feedback incorrect';
-        .explanation { margin-top: 8px; font-size: 0.95em; font-weight: normal; line-height: 1.5; }
-                feedback.textContent = '❌ Ordine errato. Ordine corretto: Vapore entra → Luce destra → Stantuffo sx → Vapore esce → Biella → Volano → Luce sinistra → Stantuffo dx';
-                feedback.style.display = 'block';
+                fb.className = 'feedback incorrect';
+                let orderDisplay = correctOrder.map((item, idx) => `${idx + 1}. ${item}`).join('<br>');
+                fb.innerHTML = `❌ <strong>Ordine errato</strong><div class="explanation"><strong>Ordine corretto:</strong><br>${orderDisplay}<br><br>${correctAnswers.order.explanation}</div>`;
+                if (!answeredQuestions.has('order')) {
+                    answeredQuestions.add('order');
+                }
             }
+        }
+        
+        // Inizializza quando la pagina è caricata
+        if (document.getElementById('orderList')) {
+            renderOrderList();
+        }
 
-            // Mostra risultato
+        // Mostra punteggio finale
+        function showFinalScore() {
+            const total = 26; // 12 scelta multipla + 5 vero/falso + 8 associazioni + 1 ordine
             const percentage = ((score / total) * 100).toFixed(1);
             const resultDiv = document.getElementById('result');
+            
+            let emoji = '';
+            let message = '';
+            
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'Eccellente! Ottima conoscenza del motore a vapore!';
+            } else if (percentage >= 75) {
+                emoji = '👍';
+                message = 'Buono! Continua così!';
+            } else if (percentage >= 60) {
+                emoji = '📚';
+                message = 'Sufficiente. Ripassa alcuni concetti.';
+            } else {
+                emoji = '📖';
+                message = 'Da ripassare. Studia ancora un po\'.';
+            }
+            
             resultDiv.innerHTML = `
-                🎯 Punteggio: ${score}/${total} (${percentage}%)
-                <br>
-                ${percentage >= 90 ? '🏆 Eccellente!' : 
-                  percentage >= 75 ? '👍 Buono!' : 
-                  percentage >= 60 ? '📚 Sufficiente' : 
-                  '📖 Da ripassare'}
+                ${emoji} <strong>PUNTEGGIO FINALE</strong><br>
+                <div style="font-size: 2em; margin: 15px 0;">${score}/${total}</div>
+                <div style="font-size: 1.5em;">${percentage}%</div>
+                <div style="font-size: 1em; margin-top: 10px; opacity: 0.95;">${message}</div>
             `;
             resultDiv.style.display = 'block';
             
