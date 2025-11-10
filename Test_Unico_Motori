@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test di Tecnologia - Capitolo 2: Motori</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #764ba2;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .chapter {
+            margin-bottom: 40px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .chapter-title {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .question.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        /* RISPOSTA MULTIPLA */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover:not(.disabled) {
+            background: #f0f0f0;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e7eaff;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option-letter {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option.correct .option-letter {
+            background: #28a745;
+        }
+
+        .option.incorrect .option-letter {
+            background: #dc3545;
+        }
+
+        /* ASSOCIAZIONE */
+        .matching-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .matching-item {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .matching-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .matching-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .matching-option {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .matching-option:hover:not(.disabled) {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+
+        .matching-option.selected {
+            background: #e7eaff;
+            border-color: #667eea;
+            font-weight: bold;
+        }
+
+        .matching-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .matching-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .matching-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* PULSANTI */
+        .verify-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .verify-btn:hover:not(:disabled) {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .verify-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* FEEDBACK */
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .feedback em {
+            display: block;
+            margin-top: 8px;
+            font-style: italic;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .chapter-title {
+                font-size: 1.2em;
+            }
+
+            .question-text {
+                font-size: 1em;
+            }
+
+            .option {
+                padding: 12px;
+            }
+        }
+
+        /* STATISTICHE FINALI */
+        .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .stats h2 {
+            margin-bottom: 15px;
+        }
+
+        .stats-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* ORDINAMENTO */
+        .ordering-number {
+            display: none; /* Nasconde i numeri per non rivelare l'ordine */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test di Tecnologia</h1>
+        <p class="subtitle">Unità G2 - Motori e Motori Primi</p>
+
+        <!-- INTRODUZIONE: MOTORI -->
+        <div class="chapter">
+            <h2 class="chapter-title">Introduzione - Motori</h2>
+
+            <!-- DOMANDA 1: RISPOSTA MULTIPLA - Definizione di motore -->
+            <div class="question" data-type="multiple" data-explanation="Un motore è una macchina che produce forza motrice sull'albero motore tenendolo in rotazione.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">1. Cos'è un motore?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Una macchina che produce forza motrice sull'albero motore tenendolo in rotazione</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Una macchina che trasforma solo energia elettrica in luce</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Un dispositivo che immagazzina energia chimica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Un sistema di trasmissione del movimento</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 2: RISPOSTA MULTIPLA - Motori primi -->
+            <div class="question" data-type="multiple" data-explanation="I motori primi sono quelli all'inizio di una trasformazione di energia, come la ruota idraulica e il motore a scoppio.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">2. Cosa sono i motori primi?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>I primi motori costruiti nella storia dell'umanità</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Quelli all'inizio di una trasformazione di energia, come la ruota idraulica e il motore a scoppio</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>I motori più potenti in assoluto</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>I motori che funzionano senza carburante</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 3: RISPOSTA MULTIPLA - Motori elettrici -->
+            <div class="question" data-type="multiple" data-explanation="I motori elettrici non sono considerati 'motori primi' perché usano energia già trasformata (energia elettrica).">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">3. Perché i motori elettrici NON sono considerati "motori primi"?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Perché sono meno potenti degli altri motori</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Perché sono stati inventati per ultimi</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Perché usano energia già trasformata (energia elettrica)</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Perché non producono movimento rotatorio</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 4: ASSOCIAZIONE - Classificazione motori -->
+            <div class="question" data-type="matching" data-explanation="Motori primi: ruota idraulica e motore a scoppio (inizio trasformazione energia). Motori NON primi: motori elettrici (usano energia già trasformata).">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">4. Classifica correttamente questi motori:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Ruota idraulica</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Motore primo</div>
+                            <div class="matching-option" data-value="B">Motore NON primo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Motore elettrico</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Motore primo</div>
+                            <div class="matching-option" data-value="B">Motore NON primo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Motore a scoppio</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Motore primo</div>
+                            <div class="matching-option" data-value="B">Motore NON primo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 1: FLUIDI DI LAVORO -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 1 - Fluidi di Lavoro</h2>
+
+            <!-- DOMANDA 5: RISPOSTA MULTIPLA - Definizione fluidi di lavoro -->
+            <div class="question" data-type="multiple" data-explanation="I fluidi di lavoro sono sostanze liquide o gassose dotate di energia che fanno funzionare i motori o le macchine motrici.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">5. Cosa sono i fluidi di lavoro?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Sostanze liquide o gassose dotate di energia che fanno funzionare i motori o le macchine motrici</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Solo liquidi utilizzati per lubrificare i motori</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Sostanze solide che producono energia termica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Gas utilizzati esclusivamente per il raffreddamento</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 6: RISPOSTA MULTIPLA - Fluidi naturali -->
+            <div class="question" data-type="multiple" data-explanation="I fluidi naturali sono ad esempio acqua corrente (fiume) o vento, che fanno funzionare mulini e aerogeneratori.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">6. Quali sono esempi di fluidi naturali?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Vapore in pressione e gas di scarico</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Acqua corrente (fiume) e vento, che fanno funzionare mulini e aerogeneratori</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Gas surriscaldati prodotti nei cilindri</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Olio lubrificante e benzina</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 7: RISPOSTA MULTIPLA - Fluidi creati dall'uomo -->
+            <div class="question" data-type="multiple" data-explanation="I fluidi creati dall'uomo sono come vapore in pressione prodotto da caldaia, o gas surriscaldati prodotti nei cilindri del motore a scoppio.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">7. Cosa sono i fluidi creati dall'uomo?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Fluidi che esistono in natura senza intervento umano</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Solo l'acqua utilizzata nei mulini</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Come vapore in pressione prodotto da caldaia, o gas surriscaldati prodotti nei cilindri del motore a scoppio</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Il vento utilizzato dagli aerogeneratori</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 8: ASSOCIAZIONE - Classificazione fluidi -->
+            <div class="question" data-type="matching" data-explanation="Fluidi naturali: acqua corrente e vento (esistono in natura). Fluidi creati dall'uomo: vapore da caldaia e gas nei cilindri (prodotti artificialmente).">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">8. Classifica correttamente questi fluidi di lavoro:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Acqua corrente di un fiume</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Fluido naturale</div>
+                            <div class="matching-option" data-value="B">Fluido creato dall'uomo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Vapore in pressione prodotto da caldaia</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Fluido naturale</div>
+                            <div class="matching-option" data-value="B">Fluido creato dall'uomo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Vento che fa funzionare aerogeneratori</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Fluido naturale</div>
+                            <div class="matching-option" data-value="B">Fluido creato dall'uomo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Gas surriscaldati nei cilindri del motore a scoppio</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Fluido naturale</div>
+                            <div class="matching-option" data-value="B">Fluido creato dall'uomo</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 2: MULINI -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 2 - Mulini</h2>
+
+            <!-- DOMANDA 9: RISPOSTA MULTIPLA - Definizione mulino -->
+            <div class="question" data-type="multiple" data-explanation="Il mulino è una macchina motrice costituita da edificio in legno o in pietra che macina grano o svolge lavorazioni semplici. È costruito in luoghi dove è possibile sfruttare energia acqua o vento per mezzo di ruota.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">9. Cos'è un mulino?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Una macchina motrice costituita da edificio in legno o in pietra che macina grano o svolge lavorazioni semplici</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Un motore elettrico per macinare cereali</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Una macchina moderna per lavorazioni industriali complesse</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Un edificio per conservare il grano</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 10: RISPOSTA MULTIPLA - Importanza storica -->
+            <div class="question" data-type="multiple" data-explanation="Il mulino è stato l'unico impianto fisso per lo sfruttamento dell'energia fino all'Ottocento circa.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">10. Qual è l'importanza storica del mulino?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>È stato il primo motore elettrico della storia</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>È stato l'unico impianto fisso per lo sfruttamento dell'energia fino all'Ottocento circa</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>È stato utilizzato solo nel Medioevo</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>È stato sostituito dai motori a vapore nel 1600</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 11: ASSOCIAZIONE - Tipi di ruota ad acqua -->
+            <div class="question" data-type="matching" data-explanation="Ruota per di sotto: sfrutta energia acqua alla base, per dislivelli modesti. Ruota per di sopra: sfrutta peso dell'acqua dall'alto, più efficiente ma serve dislivello alto. Ruota per di fianco: acqua a metà altezza con energia cinetica, la più comune.">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">11. Associa ogni tipo di ruota ad acqua alla sua caratteristica principale:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Ruota per di sotto</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Sfrutta energia acqua che arriva alla base ruota, per dislivelli modesti</div>
+                            <div class="matching-option" data-value="B">Sfrutta peso dell'acqua che cade dall'alto, la più efficiente</div>
+                            <div class="matching-option" data-value="C">Acqua arriva a metà altezza, la più comune</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Ruota per di sopra</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Sfrutta energia acqua che arriva alla base ruota, per dislivelli modesti</div>
+                            <div class="matching-option" data-value="B">Sfrutta peso dell'acqua che cade dall'alto, la più efficiente</div>
+                            <div class="matching-option" data-value="C">Acqua arriva a metà altezza, la più comune</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Ruota per di fianco</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Sfrutta energia acqua che arriva alla base ruota, per dislivelli modesti</div>
+                            <div class="matching-option" data-value="B">Sfrutta peso dell'acqua che cade dall'alto, la più efficiente</div>
+                            <div class="matching-option" data-value="C">Acqua arriva a metà altezza, la più comune</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="C">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 12: RISPOSTA MULTIPLA - Mulini a vento -->
+            <div class="question" data-type="multiple" data-explanation="Mulino a pilastro: tipo antico, intero edificio montato su palo verticale, può ruotare per orientarsi al vento. Mulino a torre: ha un cilindro fisso e un tetto conico rotante che porta la ruota del vento.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">12. Qual è la differenza principale tra mulino a pilastro e mulino a torre?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Il mulino a torre è più antico del mulino a pilastro</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Il mulino a pilastro usa l'acqua, quello a torre usa il vento</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Nel mulino a pilastro l'intero edificio ruota su un palo verticale, mentre nel mulino a torre solo il tetto conico ruota</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Il mulino a torre ha più pale del mulino a pilastro</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 13: RISPOSTA MULTIPLA - Funzionamento mulino a vento -->
+            <div class="question" data-type="multiple" data-explanation="Il mulino a vento ha una ruota formata da 4 o più pale, dove soffia il vento. La rotazione delle pale aziona ingranaggi che mettono in macina.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">13. Come funziona il mulino a vento?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>L'acqua fa girare direttamente le pale della macina</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>La ruota con 4 o più pale dove soffia il vento; la rotazione aziona ingranaggi che mettono in macina</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Funziona solo con energia elettrica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Usa il vapore per far girare le pale</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 3: TURBINE IDRAULICHE -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 3 - Turbine Idrauliche</h2>
+
+            <!-- DOMANDA 13: RISPOSTA MULTIPLA - Definizione turbine idrauliche -->
+            <div class="question" data-type="multiple" data-explanation="Le turbine idrauliche sono macchine motrici di grande potenza installate in centrali idroelettriche per far ruotare gli alternatori.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">13. Cosa sono le turbine idrauliche?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Macchine motrici di grande potenza installate in centrali idroelettriche per far ruotare gli alternatori</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Piccole ruote ad acqua per mulini</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Motori elettrici per pompare acqua</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Dispositivi per purificare l'acqua</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 14: ASSOCIAZIONE - Parti essenziali turbine -->
+            <div class="question" data-type="matching" data-explanation="Tutte le turbine hanno 3 parti essenziali: Distributore (grosso tubo fisso dove scorre acqua ad alta pressione), Ugello (restringimento del tubo, l'acqua esce a grande velocità), Girante (ruota con molte pale messe in rotazione dal getto d'acqua).">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">14. Associa ogni parte essenziale della turbina alla sua funzione:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Distributore</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grosso tubo fisso in cui scorre l'acqua ad alta pressione</div>
+                            <div class="matching-option" data-value="B">Restringimento del tubo con foro piccolo; acqua esce a grande velocità</div>
+                            <div class="matching-option" data-value="C">Ruota con molte pale messe in rotazione dal getto d'acqua</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Ugello</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grosso tubo fisso in cui scorre l'acqua ad alta pressione</div>
+                            <div class="matching-option" data-value="B">Restringimento del tubo con foro piccolo; acqua esce a grande velocità</div>
+                            <div class="matching-option" data-value="C">Ruota con molte pale messe in rotazione dal getto d'acqua</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Girante</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grosso tubo fisso in cui scorre l'acqua ad alta pressione</div>
+                            <div class="matching-option" data-value="B">Restringimento del tubo con foro piccolo; acqua esce a grande velocità</div>
+                            <div class="matching-option" data-value="C">Ruota con molte pale messe in rotazione dal getto d'acqua</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="C">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 15: ASSOCIAZIONE - Tipi di turbine e dislivelli -->
+            <div class="question" data-type="matching" data-explanation="Turbina Pelton: grandi dislivelli (fino a 2000 m). Turbina Francis: dislivelli intermedi (da 30 a 400 m). Turbina Kaplan: dislivelli minimi (3-30 m).">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">15. Associa ogni tipo di turbina al suo campo di utilizzo in base al dislivello:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Pelton</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grandi dislivelli (fino a 2000 m)</div>
+                            <div class="matching-option" data-value="B">Dislivelli intermedi (da 30 a 400 m)</div>
+                            <div class="matching-option" data-value="C">Dislivelli minimi (3-30 m)</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Francis</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grandi dislivelli (fino a 2000 m)</div>
+                            <div class="matching-option" data-value="B">Dislivelli intermedi (da 30 a 400 m)</div>
+                            <div class="matching-option" data-value="C">Dislivelli minimi (3-30 m)</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Kaplan</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Grandi dislivelli (fino a 2000 m)</div>
+                            <div class="matching-option" data-value="B">Dislivelli intermedi (da 30 a 400 m)</div>
+                            <div class="matching-option" data-value="C">Dislivelli minimi (3-30 m)</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="C">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 16: RISPOSTA MULTIPLA - Caratteristica unica Pelton -->
+            <div class="question" data-type="multiple" data-explanation="La turbina Pelton è l'unica turbina che funziona non immersa nell'acqua. Ha 1 ruota a disco con 2 cucchiai e si usa per grandi dislivelli.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">16. Qual è la caratteristica unica della turbina Pelton rispetto alle altre turbine?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Ha più pale delle altre turbine</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>È la turbina più antica</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>È l'unica turbina che funziona non immersa nell'acqua</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Funziona solo con dislivelli minimi</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 17: ASSOCIAZIONE - Caratteristiche tecniche turbine -->
+            <div class="question" data-type="matching" data-explanation="Pelton: ruota a disco con 2 cucchiai, funziona non immersa. Francis: ruota ad anello con pale svergolate. Kaplan: ruota a elica (4-8 pale) con pale inclinabili per regolare il rendimento.">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">17. Associa ogni turbina alla sua caratteristica tecnica del girante:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Pelton</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Ruota a disco con 2 cucchiai</div>
+                            <div class="matching-option" data-value="B">Ruota ad anello con pale svergolate</div>
+                            <div class="matching-option" data-value="C">Ruota a elica con 4-8 pale inclinabili</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Francis</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Ruota a disco con 2 cucchiai</div>
+                            <div class="matching-option" data-value="B">Ruota ad anello con pale svergolate</div>
+                            <div class="matching-option" data-value="C">Ruota a elica con 4-8 pale inclinabili</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Turbina Kaplan</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Ruota a disco con 2 cucchiai</div>
+                            <div class="matching-option" data-value="B">Ruota ad anello con pale svergolate</div>
+                            <div class="matching-option" data-value="C">Ruota a elica con 4-8 pale inclinabili</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="C">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 18: RISPOSTA MULTIPLA - Distributore Kaplan -->
+            <div class="question" data-type="multiple" data-explanation="Nella turbina Kaplan, il distributore è a forma di chiocciola (simile a quello della turbina Francis) con tante alette verticali orientabili per regolare il flusso d'acqua.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">18. Qual è la caratteristica del distributore della turbina Kaplan?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>È un semplice tubo dritto senza parti mobili</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>È a forma di chiocciola con tante alette verticali orientabili per regolare il flusso d'acqua</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Ha ugelli fissi come la turbina Pelton</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Non ha un distributore</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 4: MOTORE A VAPORE -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 4 - Motore a Vapore</h2>
+
+            <!-- DOMANDA 18: RISPOSTA MULTIPLA - Caratteristiche motore a vapore -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a vapore è il 1° motore moderno, tutto in ferro. Funziona con il vapore prodotto in 1 grande caldaia.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">18. Quali sono le caratteristiche principali del motore a vapore?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>È il 1° motore moderno, tutto in ferro, e funziona con il vapore prodotto in 1 grande caldaia</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>È costruito in legno e funziona con energia elettrica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Funziona con energia idraulica come i mulini</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>È il motore più antico della storia</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 19: RISPOSTA MULTIPLA - Importanza storica -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a vapore è stato usato nelle fabbriche dell'Ottocento in sostituzione della ruota idraulica. Ha avuto un lungo periodo di diffusione perché trasmetteva il movimento alle macchine operatrici.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">19. Dove e come è stato utilizzato il motore a vapore nell'Ottocento?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Solo nelle locomotive a vapore</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Nelle fabbriche dell'Ottocento in sostituzione della ruota idraulica, trasmettendo movimento alle macchine operatrici</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Solo nelle centrali elettriche moderne</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Esclusivamente nelle navi a vapore</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 20: ORDINAMENTO - Fasi funzionamento -->
+            <div class="question" data-type="ordering" data-explanation="Ordine corretto: 1) Entrata vapore → 2) Cassetto di distribuzione → 3) Luce destra → 4) Cilindro → 5) Stantuffo → 6) Uscita vapore → 7) Biella → 8) Manovella → 9) Volano → 10) Azionatore cassetto → 11) Luce sinistra.">
+                <span class="question-type">Ordinamento</span>
+                <div class="question-text">20. Ordina le 11 fasi del funzionamento del motore a vapore:</div>
+                <div class="ordering-container">
+                    <div class="ordering-item" data-correct-position="4">
+                        <span class="ordering-number">1</span>
+                        <span class="ordering-text">Stantuffo: viene spinto dal vapore verso sinistra (essendo la luce destra aperta)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up" disabled>↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="0">
+                        <span class="ordering-number">2</span>
+                        <span class="ordering-text">Entrata: vapore ad alta pressione entra nel motore</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="7">
+                        <span class="ordering-number">3</span>
+                        <span class="ordering-text">Manovella: spinta dalla biella, mette in rotazione l'albero motore</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="2">
+                        <span class="ordering-number">4</span>
+                        <span class="ordering-text">Luce destra: lasciata aperta dal cassetto, fa entrare il vapore nel cilindro dalla parte destra</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="9">
+                        <span class="ordering-number">5</span>
+                        <span class="ordering-text">Azionatore cassetto di distribuzione: ogni mezzo giro dell'albero apre l'altra luce</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="6">
+                        <span class="ordering-number">6</span>
+                        <span class="ordering-text">Biella: collega lo stantuffo con la manovella</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="10">
+                        <span class="ordering-number">7</span>
+                        <span class="ordering-text">Luce sinistra: lasciata aperta dal cassetto, fa entrare il vapore dalla parte sinistra muovendo lo stantuffo nel cilindro verso destra</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="1">
+                        <span class="ordering-number">8</span>
+                        <span class="ordering-text">Cassetto di distribuzione: arancione, apre le chiuse luci (aperture) in cui passa il vapore</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="8">
+                        <span class="ordering-number">9</span>
+                        <span class="ordering-text">Volano: fissato sull'albero motore, è una ruota pesante che continua a girare per inerzia anche quando il pistone è arrivato a un'estremità del cilindro</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="5">
+                        <span class="ordering-number">10</span>
+                        <span class="ordering-text">Uscita vapore: vapore esausto (verde), spinto dallo stantuffo, esce fuori dal cilindro</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="3">
+                        <span class="ordering-number">11</span>
+                        <span class="ordering-text">Cilindro: al suo interno scorre lo stantuffo</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down" disabled>↓</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Ordine</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 21: RISPOSTA MULTIPLA - Volano -->
+            <div class="question" data-type="multiple" data-explanation="Il volano è fissato sull'albero motore, è una ruota pesante che continua a girare per inerzia anche quando il pistone è arrivato a un'estremità del cilindro.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">21. Qual è la funzione del volano nel motore a vapore?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Produce il vapore nella caldaia</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Controlla la pressione del vapore</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>È una ruota pesante fissata sull'albero motore che continua a girare per inerzia anche quando il pistone è fermo</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Raffredda il vapore esausto</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 5: TURBINA A VAPORE -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 5 - Turbina a Vapore</h2>
+
+            <!-- DOMANDA 22: RISPOSTA MULTIPLA - Definizione e potenza -->
+            <div class="question" data-type="multiple" data-explanation="La turbina a vapore è installata nelle centrali termoelettriche dove il vapore in rotazione fa girare gli alternatori. Le turbine moderne hanno grande potenza: possono raggiungere anche 500 MW e produrre oltre 1500 MW.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">22. Dove sono installate le turbine a vapore e quale potenza possono raggiungere?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Nelle centrali termoelettriche per far girare gli alternatori; possono raggiungere 500 MW e produrre oltre 1500 MW</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Nelle fabbriche dell'Ottocento; massimo 50 MW di potenza</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Nelle centrali idroelettriche; potenza massima 100 MW</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Solo nelle locomotive a vapore; bassa potenza</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 23: ASSOCIAZIONE - Statore e Rotore -->
+            <div class="question" data-type="matching" data-explanation="Ogni turbina è formata da due elementi: Statore (formato da anelli affiancati che NON girano, ognuno provvisto di ugelli fissi) e Rotore (formato da ruote affiancate che girano, ognuna provvista di palette mobili). A ogni anello dello statore corrisponde una ruota del rotore.">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">23. Associa ogni elemento della turbina a vapore alla sua descrizione:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Statore</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Formato da anelli affiancati che NON girano, ognuno provvisto di ugelli (fissi)</div>
+                            <div class="matching-option" data-value="B">Formato da ruote affiancate che girano, ognuna provvista di palette mobili</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Rotore</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Formato da anelli affiancati che NON girano, ognuno provvisto di ugelli (fissi)</div>
+                            <div class="matching-option" data-value="B">Formato da ruote affiancate che girano, ognuna provvista di palette mobili</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 24: ORDINAMENTO - Percorso del vapore -->
+            <div class="question" data-type="ordering" data-explanation="Ordine corretto: 1) Ingresso del vapore → 2) Ugelli I stadio → 3) Palette I stadio → 4) Ugelli II stadio → 5) Albero → 6) Vapore raffreddato → 7) Stadi di bassa pressione.">
+                <span class="question-type">Ordinamento</span>
+                <div class="question-text">24. Ordina il percorso del vapore nella turbina a vapore:</div>
+                <div class="ordering-container">
+                    <div class="ordering-item" data-correct-position="2">
+                        <span class="ordering-number">1</span>
+                        <span class="ordering-text">Palette I stadio: vapore uscito dagli ugelli spinge le palette della prima ruota del rotore</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up" disabled>↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="5">
+                        <span class="ordering-number">2</span>
+                        <span class="ordering-text">Vapore raffreddato: il vapore entra negli stadi di bassa pressione</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="0">
+                        <span class="ordering-number">3</span>
+                        <span class="ordering-text">Ingresso del vapore: vapore ad alta pressione che arriva dalla caldaia entra nella turbina</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="6">
+                        <span class="ordering-number">4</span>
+                        <span class="ordering-text">Stadi di bassa pressione: hanno palette + grandi perché il vapore che vi arriva ha 1 volume maggiore (essendo - caldo)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="3">
+                        <span class="ordering-number">5</span>
+                        <span class="ordering-text">Ugelli II stadio: il vapore in uscita dal primo stadio entra nel secondo stadio e così via</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="1">
+                        <span class="ordering-number">6</span>
+                        <span class="ordering-text">Ugelli I stadio: vapore entra nel primo stadio dello statore uscendo dai suoi ugelli</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="4">
+                        <span class="ordering-number">7</span>
+                        <span class="ordering-text">Albero: sull'albero sono fissate tutte le ruote con le loro palette che, spinte dal vapore, le mettono in rotazione</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down" disabled>↓</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Ordine</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 25: RISPOSTA MULTIPLA - Stadi di bassa pressione -->
+            <div class="question" data-type="multiple" data-explanation="Gli stadi di bassa pressione hanno palette più grandi perché il vapore che vi arriva ha 1 volume maggiore (essendo meno caldo).">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">25. Perché gli stadi di bassa pressione hanno palette più grandi?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Per aumentare la velocità di rotazione</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Per migliorare il raffreddamento del vapore</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Perché il vapore che vi arriva ha un volume maggiore (essendo meno caldo)</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Per aumentare la pressione del vapore</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 26: RISPOSTA MULTIPLA - Definizione di stadio -->
+            <div class="question" data-type="multiple" data-explanation="A ogni anello dello statore corrisponde una ruota del rotore. Nella figura vediamo coppia anello-ruota detta stadio (sono disegnate solo le palette per semplicità).">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">26. Cos'è uno "stadio" in una turbina a vapore?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Una singola pala del rotore</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Un ugello dello statore</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>La coppia anello dello statore + ruota del rotore</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>L'albero centrale della turbina</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- CAPITOLO 6: MOTORE A SCOPPIO -->
+        <div class="chapter">
+            <h2 class="chapter-title">Capitolo 6 - Motore a Scoppio</h2>
+
+            <!-- DOMANDA 26: RISPOSTA MULTIPLA - Vantaggio motore a scoppio -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a scoppio è più leggero rispetto a motore e a turbina a vapore perché non ha bisogno della caldaia, essendo a combustione interna. Il carburante viene bruciato dentro il cilindro dove provoca scoppio con fortissima pressione che spinge lo stantuffo, che fa girare l'albero motore.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">26. Perché il motore a scoppio è più leggero rispetto al motore a vapore?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Perché non ha bisogno della caldaia, essendo a combustione interna</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Perché è costruito con materiali più leggeri</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Perché ha meno cilindri</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Perché funziona solo con benzina</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- SEZIONE A: MOTORE A BENZINA A 4 TEMPI (CICLO OTTO) -->
+
+            <!-- DOMANDA 27: RISPOSTA MULTIPLA - Caratteristiche ciclo Otto -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a benzina a 4 tempi, detto anche ciclo Otto, funziona con la benzina. È utilizzato in mezzi di trasporto privato, come auto, ciclomotori, motociclette, auto da corsa, e in alcuni aerei a elica.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">27. Dove viene utilizzato principalmente il motore a benzina a 4 tempi (ciclo Otto)?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>In mezzi di trasporto privato come auto, ciclomotori, motociclette, auto da corsa e aerei a elica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Solo in macchine industriali e camion</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Esclusivamente in piccoli motori agricoli</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Solo nelle navi e negli autobus</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 28: ORDINAMENTO - Fasi motore a benzina 4 tempi -->
+            <div class="question" data-type="ordering" data-explanation="Ordine corretto: 1) Aspirazione: pistone scende e aspira miscela aria-benzina nebulizzata che entra dalla luce di aspirazione (valvola sinistra aperta) → 2) Compressione: pistone risale e comprime fortemente la miscela in cima al cilindro (entrambe le valvole chiuse) → 3) Espansione: sccocca la scintilla che fa esplodere la miscela; espansione dei gas spinge il pistone verso il basso → 4) Scarico: pistone risale e spinge all'esterno i gas combusti attraverso la luce di scarico (valvola destra aperta).">
+                <span class="question-type">Ordinamento</span>
+                <div class="question-text">28. Ordina le 4 fasi del motore a benzina a 4 tempi (ciclo Otto):</div>
+                <div class="ordering-container">
+                    <div class="ordering-item" data-correct-position="2">
+                        <span class="ordering-number">1</span>
+                        <span class="ordering-text">Espansione (3° tempo): sccocca la scintilla che fa esplodere la miscela; l'espansione dei gas spinge verso il basso il pistone, che smette il movimento all'albero (fase attiva)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up" disabled>↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="0">
+                        <span class="ordering-number">2</span>
+                        <span class="ordering-text">Aspirazione (1° tempo): pistone scende e aspira miscela di aria e benzina nebulizzata, che entra dalla luce di aspirazione (la valvola di sinistra è aperta)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="3">
+                        <span class="ordering-number">3</span>
+                        <span class="ordering-text">Scarico (4° tempo): pistone risale e spinge all'esterno i gas combusti attraverso la luce di scarico (la valvola di destra è aperta)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="1">
+                        <span class="ordering-number">4</span>
+                        <span class="ordering-text">Compressione (2° tempo): pistone risale e comprime fortemente la miscela in cima al cilindro (entrambe le valvole sono chiuse)</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down" disabled>↓</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Ordine</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 29: RISPOSTA MULTIPLA - Fase attiva -->
+            <div class="question" data-type="multiple" data-explanation="Nel motore a benzina a 4 tempi, la fase attiva è l'Espansione (3° tempo), quando la scintilla fa esplodere la miscela e i gas spingono il pistone verso il basso, smettendo il movimento all'albero motore.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">29. Quale fase del ciclo Otto è chiamata "fase attiva"?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Aspirazione</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Compressione</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Espansione (quando i gas spingono il pistone verso il basso)</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Scarico</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- SEZIONE B: MOTORE A GASOLIO A 4 TEMPI (CICLO DIESEL) -->
+
+            <!-- DOMANDA 30: RISPOSTA MULTIPLA - Differenze Diesel -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a gasolio a 4 tempi, detto a ciclo Diesel, è diverso dal motore a benzina per 2 particolari: 1) il cilindro ha una struttura più robusta perché deve sopportare pressioni molto alte, 2) e non è presente la candela d'accensione.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">30. Quali sono le 2 differenze principali del motore Diesel rispetto al motore a benzina?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Ha più cilindri e consuma meno carburante</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Il cilindro ha struttura più robusta per sopportare pressioni molto alte, e non è presente la candela d'accensione</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>È più piccolo e più leggero</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Ha valvole più grandi e funziona a 2 tempi</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 31: RISPOSTA MULTIPLA - Accensione Diesel -->
+            <div class="question" data-type="multiple" data-explanation="Nel motore Diesel, in fase di compressione l'aria si riscalda a 700-800 °C, quindi viene spruzzato il gasolio che a contatto con l'aria surriscaldata si incendia e provoca lo scoppio. Non serve la candela perché l'accensione avviene per auto-combustione.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">31. Come avviene l'accensione nel motore Diesel senza candela?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Con una scintilla elettrica prodotta dall'alternatore</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>L'aria si riscalda a 700-800°C durante la compressione; il gasolio spruzzato si incendia a contatto con l'aria surriscaldata</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Con una fiamma pilota sempre accesa nel cilindro</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Con un sistema di riscaldamento elettrico esterno</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 32: RISPOSTA MULTIPLA - Utilizzo Diesel -->
+            <div class="question" data-type="multiple" data-explanation="Il motore Diesel consuma meno di quello a benzina e per questo viene usato per macchine industriali come camion e macchine agricole ma anche su autobus, automobili, navi ecc.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">32. Dove viene principalmente utilizzato il motore Diesel?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Solo in auto da corsa e moto sportive</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Esclusivamente in piccoli motori agricoli come tagliaerba</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>In macchine industriali (camion, macchine agricole), autobus, automobili e navi</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Solo in aerei ed elicotteri</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 33: ASSOCIAZIONE - Fasi Diesel vs Benzina -->
+            <div class="question" data-type="matching" data-explanation="Fase Aspirazione Diesel: pistone scende e aspira solamente aria (no benzina). Fase Compressione Diesel: pistone risale e comprime fortemente l'aria, che si surriscalda fino a 700-800°C. Fase Espansione Diesel: iniettore spruzza un getto di gasolio nebulizzato che si incendia a contatto con l'aria surriscaldata; espansione dei gas spinge il pistone in basso.">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">33. Associa ogni fase del motore Diesel alla sua caratteristica specifica:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Aspirazione Diesel (1° tempo)</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Pistone aspira solamente aria (NO benzina)</div>
+                            <div class="matching-option" data-value="B">Aria si surriscalda a 700-800°C</div>
+                            <div class="matching-option" data-value="C">Iniettore spruzza gasolio che si incendia</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Compressione Diesel (2° tempo)</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Pistone aspira solamente aria (NO benzina)</div>
+                            <div class="matching-option" data-value="B">Aria si surriscalda a 700-800°C</div>
+                            <div class="matching-option" data-value="C">Iniettore spruzza gasolio che si incendia</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Espansione Diesel (3° tempo)</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Pistone aspira solamente aria (NO benzina)</div>
+                            <div class="matching-option" data-value="B">Aria si surriscalda a 700-800°C</div>
+                            <div class="matching-option" data-value="C">Iniettore spruzza gasolio che si incendia</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="C">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- SEZIONE C: MOTORE A 2 TEMPI A MISCELA -->
+
+            <!-- DOMANDA 34: RISPOSTA MULTIPLA - Struttura 2 tempi -->
+            <div class="question" data-type="multiple" data-explanation="Il motore a 2 tempi a miscela rispetto al motore a benzina ha struttura più semplice: mancano valvole con sistema di apertura e chiusura, carburante è miscela di benzina e olio in parti variabili, e motore esegue un giro vigoroso per lubrificare le parti in movimento.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">34. Qual è la principale differenza strutturale del motore a 2 tempi rispetto al motore a 4 tempi?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Mancano valvole con sistema di apertura e chiusura; le luci vengono aperte e chiuse dal movimento stesso del pistone</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Ha il doppio dei cilindri</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Usa solo gasolio come carburante</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Ha una candela più potente</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 35: RISPOSTA MULTIPLA - Carburante 2 tempi -->
+            <div class="question" data-type="multiple" data-explanation="Nel motore a 2 tempi il carburante è miscela di benzina e olio in parti variabili, e il motore esegue un giro vigoroso per lubrificare le parti in movimento.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">35. Che tipo di carburante usa il motore a 2 tempi?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Solo benzina pura</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Miscela di benzina e olio in parti variabili</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Solo gasolio</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>GPL o metano</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 36: ORDINAMENTO - Fasi motore 2 tempi -->
+            <div class="question" data-type="ordering" data-explanation="Ordine corretto: 1) Scoppio e scarico (1° tempo): pistone ha già compresso la miscela e adesso sta scocando la scintilla. Nello stesso istante miscela benzina-olio-aria entra nel carter dalla luce di aspirazione e spinge la miscela esplosa. Espansione dei gas spinge il pistone in basso e fa ruotare l'albero motore. Nello stesso istante si apre la luce di scarico e i gas combusti escono fuori → 2) Aspirazione e compressione (2° tempo): il pistone ha aperto la luce laterale; la miscela esce dal carter ed entra nella camera di scoppio. Mentre risale elimina i gas combusti dalla luce di scarico che si è aperta. Il pistone si trova in salita: la luce di scarico si chiude e la miscela si comprime nella camera di scoppio. Dopo un istante scocherà una nuova scintilla.">
+                <span class="question-type">Ordinamento</span>
+                <div class="question-text">36. Ordina le 2 fasi del motore a 2 tempi:</div>
+                <div class="ordering-container">
+                    <div class="ordering-item" data-correct-position="1">
+                        <span class="ordering-number">1</span>
+                        <span class="ordering-text">Aspirazione e compressione (2° tempo): pistone ha aperto luce laterale; miscela esce dal carter ed entra nella camera. Pistone in salita: luce scarico si chiude e miscela si comprime</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up" disabled>↑</button>
+                            <button class="arrow-btn move-down">↓</button>
+                        </div>
+                    </div>
+                    <div class="ordering-item" data-correct-position="0">
+                        <span class="ordering-number">2</span>
+                        <span class="ordering-text">Scoppio e scarico (1° tempo): pistone ha compresso miscela e sta scocando scintilla. Miscela entra nel carter. Espansione gas spinge pistone in basso. Si apre luce scarico e gas combusti escono</span>
+                        <div class="arrow-buttons">
+                            <button class="arrow-btn move-up">↑</button>
+                            <button class="arrow-btn move-down" disabled>↓</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Ordine</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 37: RISPOSTA MULTIPLA - Utilizzo 2 tempi -->
+            <div class="question" data-type="multiple" data-explanation="Per la semplicità e il basso costo il motore a 2 tempi è impiegato per piccoli motori agricoli come i tagliaerba e i motoseghe. Negli autoveicoli a motore è ormai raro, perché inquina troppo (si usa il motore a benzina). In passato era il motore del ciclomotore da 50 cc, oggi non più perché inquina troppo.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">37. Perché il motore a 2 tempi è ormai raro negli autoveicoli?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Perché è troppo costoso da produrre</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Perché ha meno potenza</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">C</span>
+                        <span>Perché inquina troppo (oggi si usa il motore a benzina)</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Perché consuma troppo carburante</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- SEZIONE EXTRA: STANDARD EURO E TECNOLOGIE FUTURE -->
+        <div class="chapter">
+            <h2 class="chapter-title">Sezione Extra - Standard Euro e Tecnologie Future</h2>
+
+            <!-- DOMANDA 38: RISPOSTA MULTIPLA - Standard Euro -->
+            <div class="question" data-type="multiple" data-explanation="L'Unione Europea ha introdotto una serie di limitazioni sulle emissioni dei veicoli a motore. Per poter vendere prodotti, le case automobilistiche devono garantire che questi rispettino determinati livelli di emissione: si parla di standard Euro, cioè meno inquinamento.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">38. Cosa sono gli standard Euro?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Serie di limitazioni dell'Unione Europea sulle emissioni dei veicoli a motore per garantire meno inquinamento</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Regole europee sulla potenza massima dei motori</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Normative sul prezzo dei carburanti</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Standard di sicurezza per le cinture di sicurezza</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 39: RISPOSTA MULTIPLA - Evoluzione standard -->
+            <div class="question" data-type="multiple" data-explanation="La prima limitazione, chiamata Euro 1, è stata introdotta nel 1992 e via via ne sono state prodotte di più restrittive: la più recente è Euro 6. I parametri di questa data sono indicati come Euro 0.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">39. Qual è stata la prima limitazione europea sulle emissioni e quando è stata introdotta?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>Euro 0 nel 1980</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>Euro 1 nel 1992</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Euro 3 nel 2000</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Euro 6 nel 2015</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 40: ASSOCIAZIONE - Parametri inquinanti -->
+            <div class="question" data-type="matching" data-explanation="I parametri di riferimento sono tre: gas inquinanti (ossido di carbonio, idrocarburi e ossidi di azoto) e particolato (cioè le polveri sottili, molto dannose per i polmoni).">
+                <span class="question-type">Associazione</span>
+                <div class="question-text">40. Associa ogni categoria di inquinanti alla sua descrizione:</div>
+                <div class="matching-container">
+                    <div class="matching-item">
+                        <div class="matching-label">Gas inquinanti</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Ossido di carbonio, idrocarburi e ossidi di azoto</div>
+                            <div class="matching-option" data-value="B">Polveri sottili molto dannose per i polmoni</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="A">
+                    </div>
+                    <div class="matching-item">
+                        <div class="matching-label">Particolato</div>
+                        <div class="matching-options">
+                            <div class="matching-option" data-value="A">Ossido di carbonio, idrocarburi e ossidi di azoto</div>
+                            <div class="matching-option" data-value="B">Polveri sottili molto dannose per i polmoni</div>
+                        </div>
+                        <input type="hidden" class="matching-answer" data-correct="B">
+                    </div>
+                </div>
+                <button class="verify-btn">Verifica Risposte</button>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 41: RISPOSTA MULTIPLA - Inchiostro da gas di scarico -->
+            <div class="question" data-type="multiple" data-explanation="In Massachusetts (USA) è stato messo a punto un dispositivo che trasforma i gas di scarico delle automobili in inchiostro. Va applicato al tubo di scappamento, ha una durata di circa 20 giorni. Funziona grazie a speciali cartucce con una miscela di particelle cariche elettricamente. La miscela riesce a intrappolare fino al 95% di particolato, eliminando metalli pesanti e altre sostanze nocive.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">41. Cos'è il dispositivo innovativo sviluppato in Massachusetts (USA)?</div>
+                <div class="options">
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">A</span>
+                        <span>Un dispositivo che trasforma i gas di scarico delle automobili in inchiostro, intrappolando fino al 95% di particolato</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">B</span>
+                        <span>Un filtro che elimina completamente tutti i gas di scarico</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>Un sistema che trasforma i gas in energia elettrica</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Un catalizzatore che riduce il consumo di carburante</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- DOMANDA 42: RISPOSTA MULTIPLA - Caratteristiche inchiostro -->
+            <div class="question" data-type="multiple" data-explanation="Si ricava in questo modo un inchiostro resistente all'acqua, di alta qualità, atossico e non inquinante. La sperimentazione è stata avviata in India con risultati incoraggianti, tanto che l'inchiostro è già stato utilizzato da alcuni artisti di strada.">
+                <span class="question-type">Risposta Multipla</span>
+                <div class="question-text">42. Quali sono le caratteristiche dell'inchiostro ottenuto dai gas di scarico?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">A</span>
+                        <span>È economico ma di bassa qualità e si cancella facilmente</span>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <span class="option-letter">B</span>
+                        <span>È resistente all'acqua, di alta qualità, atossico e non inquinante</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">C</span>
+                        <span>È colorato ma ancora tossico e inquinante</span>
+                    </div>
+                    <div class="option" data-correct="false">
+                        <span class="option-letter">D</span>
+                        <span>Può essere usato solo su carta speciale</span>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+
+        <!-- STATISTICHE FINALI -->
+        <div class="stats" style="display: none;">
+            <h2>Risultato del Test</h2>
+            <div class="stats-value"><span id="correct-answers">0</span> / <span id="total-questions">0</span></div>
+            <p>Risposte corrette</p>
+        </div>
+    </div>
+
+    <script>
+        // Gestione domande a risposta multipla (feedback immediato)
+        document.querySelectorAll('.question[data-type="multiple"]').forEach(question => {
+            const options = question.querySelectorAll('.option');
+            const feedback = question.querySelector('.feedback');
+            const explanation = question.dataset.explanation || '';
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    const isCorrect = this.dataset.correct === 'true';
+                    
+                    // Disabilita tutte le opzioni
+                    options.forEach(opt => {
+                        opt.classList.add('disabled');
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('correct');
+                        }
+                    });
+                    
+                    // Marca la risposta selezionata
+                    if (!isCorrect) {
+                        this.classList.add('incorrect');
+                    }
+                    
+                    // Mostra feedback con spiegazione
+                    feedback.classList.add('show');
+                    if (isCorrect) {
+                        feedback.innerHTML = '✓ <strong>Risposta corretta!</strong><br>' + 
+                                           (explanation ? '<em>' + explanation + '</em>' : '');
+                        feedback.classList.add('correct');
+                        question.classList.add('correct');
+                    } else {
+                        feedback.innerHTML = '✗ <strong>Risposta errata.</strong> La risposta corretta è evidenziata in verde.<br>' +
+                                           (explanation ? '<em>' + explanation + '</em>' : '');
+                        feedback.classList.add('incorrect');
+                        question.classList.add('incorrect');
+                    }
+                });
+            });
+        });
+
+        // Gestione ordinamento con frecce
+        document.querySelectorAll('.question[data-type="ordering"]').forEach(question => {
+            const container = question.querySelector('.ordering-container');
+            const items = Array.from(container.querySelectorAll('.ordering-item'));
+            const verifyBtn = question.querySelector('.verify-btn');
+            const feedback = question.querySelector('.feedback');
+            const explanation = question.dataset.explanation || '';
+
+            function updateArrowStates() {
+                const currentItems = Array.from(container.querySelectorAll('.ordering-item'));
+                currentItems.forEach((item, index) => {
+                    const upBtn = item.querySelector('.move-up');
+                    const downBtn = item.querySelector('.move-down');
+                    
+                    upBtn.disabled = index === 0;
+                    downBtn.disabled = index === currentItems.length - 1;
+                });
+            }
+
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('move-up')) {
+                    const item = e.target.closest('.ordering-item');
+                    const prev = item.previousElementSibling;
+                    if (prev) {
+                        container.insertBefore(item, prev);
+                        updateArrowStates();
+                    }
+                } else if (e.target.classList.contains('move-down')) {
+                    const item = e.target.closest('.ordering-item');
+                    const next = item.nextElementSibling;
+                    if (next) {
+                        container.insertBefore(next, item);
+                        updateArrowStates();
+                    }
+                }
+            });
+
+            verifyBtn.addEventListener('click', function() {
+                const currentItems = Array.from(container.querySelectorAll('.ordering-item'));
+                let allCorrect = true;
+
+                currentItems.forEach((item, index) => {
+                    const correctPosition = parseInt(item.dataset.correctPosition);
+                    if (index === correctPosition) {
+                        item.classList.add('correct');
+                        item.classList.remove('incorrect');
+                    } else {
+                        item.classList.add('incorrect');
+                        item.classList.remove('correct');
+                        allCorrect = false;
+                    }
+                });
+
+                // Disabilita le frecce dopo la verifica
+                currentItems.forEach(item => {
+                    item.querySelectorAll('.arrow-btn').forEach(btn => btn.disabled = true);
+                });
+                verifyBtn.disabled = true;
+
+                feedback.classList.add('show');
+                if (allCorrect) {
+                    feedback.innerHTML = '✓ <strong>Ordine corretto!</strong><br>' + 
+                                       (explanation ? '<em>' + explanation + '</em>' : '');
+                    feedback.classList.add('correct');
+                    question.classList.add('correct');
+                } else {
+                    feedback.innerHTML = '✗ <strong>Ordine non corretto.</strong> Gli elementi corretti sono evidenziati in verde, quelli errati in rosso.<br>' +
+                                       (explanation ? '<em>' + explanation + '</em>' : '');
+                    feedback.classList.add('incorrect');
+                    question.classList.add('incorrect');
+                }
+            });
+
+            updateArrowStates();
+        });
+
+        // Gestione associazione
+        document.querySelectorAll('.question[data-type="matching"]').forEach(question => {
+            const items = question.querySelectorAll('.matching-item');
+            const verifyBtn = question.querySelector('.verify-btn');
+            const feedback = question.querySelector('.feedback');
+            const explanation = question.dataset.explanation || '';
+
+            items.forEach(item => {
+                const options = item.querySelectorAll('.matching-option');
+                const answerInput = item.querySelector('.matching-answer');
+
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        if (this.classList.contains('disabled')) return;
+
+                        // Deseleziona le altre opzioni dello stesso gruppo
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        answerInput.value = this.dataset.value;
+                    });
+                });
+            });
+
+            verifyBtn.addEventListener('click', function() {
+                let allCorrect = true;
+
+                items.forEach(item => {
+                    const answerInput = item.querySelector('.matching-answer');
+                    const selectedValue = answerInput.value;
+                    const correctValue = answerInput.dataset.correct;
+                    const options = item.querySelectorAll('.matching-option');
+
+                    options.forEach(option => {
+                        option.classList.add('disabled');
+                        
+                        if (option.dataset.value === correctValue) {
+                            option.classList.add('correct');
+                        }
+                        
+                        if (option.dataset.value === selectedValue && selectedValue !== correctValue) {
+                            option.classList.add('incorrect');
+                            allCorrect = false;
+                        }
+                    });
+                });
+
+                verifyBtn.disabled = true;
+                feedback.classList.add('show');
+
+                if (allCorrect) {
+                    feedback.innerHTML = '✓ <strong>Tutte le associazioni sono corrette!</strong><br>' +
+                                       (explanation ? '<em>' + explanation + '</em>' : '');
+                    feedback.classList.add('correct');
+                    question.classList.add('correct');
+                } else {
+                    feedback.innerHTML = '✗ <strong>Alcune associazioni non sono corrette.</strong> Le risposte corrette sono evidenziate in verde.<br>' +
+                                       (explanation ? '<em>' + explanation + '</em>' : '');
+                    feedback.classList.add('incorrect');
+                    question.classList.add('incorrect');
+                }
+            });
+        });
+
+        // Calcolo statistiche finali
+        function showFinalStats() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            const correctAnswers = document.querySelectorAll('.question.correct').length;
+            
+            document.querySelector('.stats').style.display = 'block';
+            document.getElementById('total-questions').textContent = totalQuestions;
+            document.getElementById('correct-answers').textContent = correctAnswers;
+        }
+
+        // Mostra statistiche dopo un breve delay (per dare tempo di completare)
+        // setTimeout(() => showFinalStats(), 30000);
+    </script>
+</body>
+</html>
