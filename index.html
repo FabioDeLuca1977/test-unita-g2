@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Unit 3 – Present Perfect (Ripasso + Quiz)</title>
+  <title>Unit 3 – Present Perfect (Ripasso + Quiz immediato)</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -43,7 +43,7 @@
     h1{ margin:0 0 8px 0; font-size:20px; letter-spacing:.2px; }
     .subtitle{ color:var(--muted); font-size:13.5px; line-height:1.35; }
     .panel{
-      flex:0 1 340px; min-width:280px;
+      flex:0 1 360px; min-width:280px;
       background:linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
       border:1px solid var(--line);
       border-radius:var(--radius);
@@ -86,9 +86,7 @@
     .hint{ color:var(--muted); font-size:13px; line-height:1.45; margin:0 0 10px 0; }
 
     /* Slides */
-    .slides{
-      display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    }
+    .slides{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     @media (max-width:760px){ .slides{ grid-template-columns:1fr; } }
     .slide{
       border:1px solid var(--line);
@@ -145,42 +143,48 @@
       background:rgba(255,255,255,0.04);
     }
     summary{ cursor:pointer; font-weight:850; }
-    .sol{
-      margin-top:10px;
-      padding-top:10px;
-      border-top:1px dashed var(--line);
-      color:rgba(255,255,255,0.86);
-      font-family:var(--mono);
-      font-size:12.5px;
-      line-height:1.45;
-      white-space:pre-wrap;
+
+    .recapList{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
+    .recapItem{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(255,255,255,0.04);
+    }
+    .recapItem b{ font-family:var(--mono); }
   </style>
 </head>
 <body>
 
 <header>
   <div class="title">
-    <h1>Unit 3 – Present Perfect | Ripasso “a slide” + Quiz (tempo + perché)</h1>
+    <h1>Unit 3 – Present Perfect | Ripasso + Quiz con risultato immediato</h1>
     <div class="subtitle">
-      1) Leggi le “slide” (ripasso rapido). 2) Fai il quiz: per ogni frase scegli <b>il tempo</b> e poi scegli <b>il motivo</b>.
-      <br>Tip: se sbagli, leggi la spiegazione e ripeti la regola a voce alta.
+      ✅ Appena scegli una risposta, ricevi subito: <b>giusto/sbagliato + spiegazione</b>.
+      <br>In basso trovi anche un <b>recap degli errori</b> per ripassare velocemente.
     </div>
   </div>
 
   <div class="panel">
     <div class="row">
       <div class="pill">Punteggio: <span id="score">0</span>/<span id="total">0</span></div>
-      <div class="pill">Tentativi: <span id="tries">0</span></div>
+      <div class="pill">Risposte: <span id="answered">0</span>/<span id="qcount">0</span></div>
     </div>
     <div style="height:10px"></div>
     <div class="row">
-      <button class="btn" id="checkAllBtn">Correggi tutto</button>
       <button class="btn" id="resetBtn">Reset</button>
+      <button class="btn" id="checkAllBtn">Ricalcola</button>
     </div>
     <div style="height:10px"></div>
     <div class="hint" style="margin:0">
-      <span class="mono">Obiettivo verifica:</span> PP vs SP, been/gone, ever/never, for/since, esperienze ed emozioni.
+      <span class="mono">Tip:</span> dopo ogni errore, ripeti la regola a voce alta (10 secondi).
     </div>
   </div>
 </header>
@@ -189,13 +193,13 @@
 
   <!-- RIPASSO SLIDE -->
   <section class="card" id="card-slides">
-    <h2>Ripasso generale (come slide da leggere) <span class="pill">Leggi 2 minuti</span></h2>
-    <p class="hint">Leggi a voce alta. Poi prova a ripetere a memoria con 3 frasi: “quando uso PP, quando SP, been/gone, ever/never, for/since”.</p>
+    <h2>Ripasso generale (come slide da leggere) <span class="pill">2 minuti</span></h2>
+    <p class="hint">Leggi a voce alta. Poi prova a ripetere a memoria: “PP vs SP, for/since, been/gone, ever/never”.</p>
 
     <div class="slides">
       <div class="slide">
         <div class="stitle">Slide 1 — Forma del Present Perfect</div>
-        <div class="mono">Aff: S + have/has + V3 • Neg: S + haven’t/hasn’t + V3 • Int: Have/Has + S + V3?</div>
+        <div class="mono">S + have/has + V3 • haven’t/hasn’t + V3 • Have/Has + S + V3?</div>
         <ul>
           <li>He <b>has finished</b> his homework.</li>
           <li><b>Have</b> you <b>ever been</b> to London?</li>
@@ -205,26 +209,26 @@
       <div class="slide">
         <div class="stitle">Slide 2 — Present Perfect: quando si usa</div>
         <ul>
-          <li><b>Esperienze di vita</b> (non dici quando): “I have tried sushi.”</li>
-          <li><b>Effetto nel presente</b>: “I have lost my keys.” (ora non le ho)</li>
-          <li><b>Tempo non finito</b>: “This week / today” (se il periodo non è finito)</li>
+          <li><b>Esperienze</b> (non dici quando): “I have tried sushi.”</li>
+          <li><b>Effetto nel presente</b>: “I have lost my keys.”</li>
+          <li><b>Tempo non finito</b>: “this week / today” (se non è finito)</li>
         </ul>
       </div>
 
       <div class="slide">
         <div class="stitle">Slide 3 — Simple Past: quando si usa</div>
         <ul>
-          <li>Quando c’è un <b>tempo finito/preciso</b>: yesterday, last year, in 2020, two days ago…</li>
-          <li>Racconti un fatto “chiuso” nel passato: “I visited London last year.”</li>
+          <li><b>Tempo finito/preciso</b>: yesterday, last year, in 2020, ago…</li>
+          <li>Fatto “chiuso” nel passato: “I visited London last year.”</li>
         </ul>
       </div>
 
       <div class="slide">
-        <div class="stitle">Slide 4 — PP vs SP: trucco velocissimo</div>
+        <div class="stitle">Slide 4 — Trucco velocissimo</div>
         <ul>
-          <li>Se vedi <b>yesterday/last/in 2020/ago</b> → quasi sempre <b>Simple Past</b>.</li>
-          <li>Se NON vedi “quando” → spesso <b>Present Perfect</b>.</li>
-          <li>Se l’azione “conta adesso” (risultato) → <b>Present Perfect</b>.</li>
+          <li>Se vedi <b>yesterday/last/in 2020/ago</b> → <b>Simple Past</b>.</li>
+          <li>Se non vedi “quando” → spesso <b>Present Perfect</b>.</li>
+          <li>Se “conta adesso” (risultato) → <b>Present Perfect</b>.</li>
         </ul>
       </div>
 
@@ -233,23 +237,22 @@
         <ul>
           <li><b>for</b> + durata: for two hours / for three years</li>
           <li><b>since</b> + inizio: since 2020 / since Monday</li>
-          <li>Spesso con Present Perfect: “I have lived here for three years.”</li>
         </ul>
       </div>
 
       <div class="slide">
         <div class="stitle">Slide 6 — Have been / Have gone</div>
         <ul>
-          <li><b>have been</b> = sono stato e sono tornato: “I have been to Paris.”</li>
-          <li><b>have gone</b> = è andato ed è ancora lì: “She has gone to the gym.”</li>
+          <li><b>have been</b> = andato e tornato</li>
+          <li><b>have gone</b> = andato ed è ancora lì</li>
         </ul>
       </div>
 
       <div class="slide">
         <div class="stitle">Slide 7 — Ever / Never</div>
         <ul>
-          <li><b>ever</b> (domande): “Have you ever…?” (= mai nella vita?)</li>
-          <li><b>never</b> (affermazioni negative): “I have never…” (senza “not”)</li>
+          <li><b>ever</b> nelle domande: “Have you ever…?”</li>
+          <li><b>never</b> = mai (senza “not”): “I have never…”</li>
           <li>Posizione tipica: have/has + <b>ever/never</b> + V3</li>
         </ul>
       </div>
@@ -257,8 +260,8 @@
       <div class="slide">
         <div class="stitle">Slide 8 — Esperienze ed emozioni</div>
         <ul>
-          <li>Esperienza generale: “I have been very happy.” (non dici quando)</li>
-          <li>Momento preciso: “I was nervous yesterday.” (tempo finito)</li>
+          <li>Generale: “I have been happy.” (non dici quando)</li>
+          <li>Preciso: “I was nervous yesterday.”</li>
         </ul>
       </div>
     </div>
@@ -267,111 +270,99 @@
   <!-- QUIZ TEMPO -->
   <section class="card" id="card-tense">
     <h2>Quiz A — Scegli il tempo giusto <span class="pill">12 punti</span></h2>
-    <p class="hint">Per ogni situazione scegli: <b>Present Perfect</b> o <b>Simple Past</b> (oppure been/gone / ever/never quando richiesto).</p>
+    <p class="hint">Scegli una risposta: il risultato appare subito sotto con la spiegazione.</p>
 
-    <!-- A1 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="SP"
-         data-explain="C’è un tempo finito: 'last year' → Simple Past.">
-      <div class="qtitle">A1) Scegli il tempo corretto</div>
+    <div class="q" data-id="A1" data-type="mc" data-points="1" data-correct="SP"
+         data-explain="C’è un tempo finito: “last year” → Simple Past.">
+      <div class="qtitle">A1) Tempo corretto</div>
       <div class="prompt">I ____ (visit) London last year.</div>
       <label><input type="radio" name="A1" value="PP">Present Perfect: have visited</label>
       <label><input type="radio" name="A1" value="SP">Simple Past: visited</label>
     </div>
 
-    <!-- A2 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="PP"
+    <div class="q" data-id="A2" data-type="mc" data-points="1" data-correct="PP"
          data-explain="Non dici quando: esperienza di vita → Present Perfect.">
-      <div class="qtitle">A2) Scegli il tempo corretto</div>
+      <div class="qtitle">A2) Tempo corretto</div>
       <div class="prompt">I ____ (visit) London.</div>
       <label><input type="radio" name="A2" value="PP">Present Perfect: have visited</label>
       <label><input type="radio" name="A2" value="SP">Simple Past: visited</label>
     </div>
 
-    <!-- A3 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="PP"
-         data-explain="Effetto nel presente: ora non può aprire la porta → Present Perfect.">
-      <div class="qtitle">A3) Scegli il tempo corretto</div>
+    <div class="q" data-id="A3" data-type="mc" data-points="1" data-correct="PP"
+         data-explain="Effetto nel presente: ora non può aprire → Present Perfect.">
+      <div class="qtitle">A3) Tempo corretto</div>
       <div class="prompt">I ____ (lose) my keys. I can’t open the door.</div>
       <label><input type="radio" name="A3" value="PP">Present Perfect: have lost</label>
       <label><input type="radio" name="A3" value="SP">Simple Past: lost</label>
     </div>
 
-    <!-- A4 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="SP"
-         data-explain="Tempo finito: 'two hours ago' → Simple Past.">
-      <div class="qtitle">A4) Scegli il tempo corretto</div>
+    <div class="q" data-id="A4" data-type="mc" data-points="1" data-correct="SP"
+         data-explain="Tempo finito: “ago” → Simple Past.">
+      <div class="qtitle">A4) Tempo corretto</div>
       <div class="prompt">They ____ (arrive) two hours ago.</div>
       <label><input type="radio" name="A4" value="PP">Present Perfect: have arrived</label>
       <label><input type="radio" name="A4" value="SP">Simple Past: arrived</label>
     </div>
 
-    <!-- A5 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="PP"
-         data-explain="'This week' (spesso tempo non finito) → Present Perfect.">
-      <div class="qtitle">A5) Scegli il tempo corretto</div>
+    <div class="q" data-id="A5" data-type="mc" data-points="1" data-correct="PP"
+         data-explain="“This week” può essere un tempo non finito → spesso Present Perfect.">
+      <div class="qtitle">A5) Tempo corretto</div>
       <div class="prompt">We ____ (watch) three films this week.</div>
       <label><input type="radio" name="A5" value="PP">Present Perfect: have watched</label>
       <label><input type="radio" name="A5" value="SP">Simple Past: watched</label>
     </div>
 
-    <!-- A6 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="PP"
-         data-explain="Durata con 'for' e situazione che continua → Present Perfect.">
-      <div class="qtitle">A6) Scegli il tempo corretto</div>
+    <div class="q" data-id="A6" data-type="mc" data-points="1" data-correct="PP"
+         data-explain="“for” + durata (spesso continua fino ad ora) → Present Perfect.">
+      <div class="qtitle">A6) Tempo corretto</div>
       <div class="prompt">I ____ (live) here for three years.</div>
       <label><input type="radio" name="A6" value="PP">Present Perfect: have lived</label>
       <label><input type="radio" name="A6" value="SP">Simple Past: lived</label>
     </div>
 
-    <!-- A7 (been/gone) -->
-    <div class="q" data-type="mc" data-points="1" data-correct="GONE"
-         data-explain="Non è qui, quindi è andata ed è ancora lì → have gone.">
-      <div class="qtitle">A7) Have been o have gone?</div>
+    <div class="q" data-id="A7" data-type="mc" data-points="1" data-correct="GONE"
+         data-explain="Non è qui: è andata ed è ancora lì → have gone.">
+      <div class="qtitle">A7) Been o gone?</div>
       <div class="prompt">Anna isn’t here. She has ____ to the supermarket.</div>
       <label><input type="radio" name="A7" value="BEEN">been</label>
       <label><input type="radio" name="A7" value="GONE">gone</label>
     </div>
 
-    <!-- A8 (been/gone) -->
-    <div class="q" data-type="mc" data-points="1" data-correct="BEEN"
-         data-explain="È tornato a casa → have been.">
-      <div class="qtitle">A8) Have been o have gone?</div>
+    <div class="q" data-id="A8" data-type="mc" data-points="1" data-correct="BEEN"
+         data-explain="È tornato: been = andato e tornato.">
+      <div class="qtitle">A8) Been o gone?</div>
       <div class="prompt">Marco is back home. He has ____ to Milan.</div>
       <label><input type="radio" name="A8" value="BEEN">been</label>
       <label><input type="radio" name="A8" value="GONE">gone</label>
     </div>
 
-    <!-- A9 (ever) -->
-    <div class="q" data-type="mc" data-points="1" data-correct="EVER"
-         data-explain="Domanda su esperienza: 'Have you ever...?'">
+    <div class="q" data-id="A9" data-type="mc" data-points="1" data-correct="EVER"
+         data-explain="Domanda su esperienza: “Have you ever…?”">
       <div class="qtitle">A9) Ever o never?</div>
       <div class="prompt">Have you ____ eaten sushi?</div>
       <label><input type="radio" name="A9" value="EVER">ever</label>
       <label><input type="radio" name="A9" value="NEVER">never</label>
     </div>
 
-    <!-- A10 (never) -->
-    <div class="q" data-type="mc" data-points="1" data-correct="NEVER"
-         data-explain="Affermazione negativa: 'I have never...' (senza not).">
+    <div class="q" data-id="A10" data-type="mc" data-points="1" data-correct="NEVER"
+         data-explain="“never” = mai (frase negativa senza “not”).">
       <div class="qtitle">A10) Ever o never?</div>
       <div class="prompt">I have ____ seen snow.</div>
       <label><input type="radio" name="A10" value="EVER">ever</label>
       <label><input type="radio" name="A10" value="NEVER">never</label>
     </div>
 
-    <!-- A11 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="SP"
-         data-explain="Momento preciso: 'yesterday' → Simple Past.">
-      <div class="qtitle">A11) Scegli il tempo corretto</div>
+    <div class="q" data-id="A11" data-type="mc" data-points="1" data-correct="SP"
+         data-explain="Tempo finito: “yesterday” → Simple Past.">
+      <div class="qtitle">A11) Tempo corretto</div>
       <div class="prompt">She ____ (finish) her homework yesterday.</div>
       <label><input type="radio" name="A11" value="PP">Present Perfect: has finished</label>
       <label><input type="radio" name="A11" value="SP">Simple Past: finished</label>
     </div>
 
-    <!-- A12 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="SP"
-         data-explain="Tempo finito: 'in 2021' → Simple Past.">
-      <div class="qtitle">A12) Scegli il tempo corretto</div>
+    <div class="q" data-id="A12" data-type="mc" data-points="1" data-correct="SP"
+         data-explain="Momento preciso: “in 2021” → Simple Past.">
+      <div class="qtitle">A12) Tempo corretto</div>
       <div class="prompt">I ____ (meet) my best friend in 2021.</div>
       <label><input type="radio" name="A12" value="PP">Present Perfect: have met</label>
       <label><input type="radio" name="A12" value="SP">Simple Past: met</label>
@@ -381,11 +372,10 @@
   <!-- QUIZ PERCHE' -->
   <section class="card" id="card-why">
     <h2>Quiz B — Scegli il “perché” (motivazione) <span class="pill">12 punti</span></h2>
-    <p class="hint">Stesse situazioni: ora scegli il motivo giusto. (Così memorizzi la regola.)</p>
+    <p class="hint">Stesse situazioni: scegli il motivo (così memorizzi la regola).</p>
 
-    <!-- B1 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="DEF_TIME"
-         data-explain="Past Simple si usa con tempo finito/preciso (yesterday/last/in 2020/ago).">
+    <div class="q" data-id="B1" data-type="mc" data-points="1" data-correct="DEF_TIME"
+         data-explain="Past Simple con tempo finito/preciso: yesterday/last/in 2020/ago.">
       <div class="qtitle">B1) Perché in A1 si usa Simple Past?</div>
       <div class="prompt">I visited London last year.</div>
       <label><input type="radio" name="B1" value="DEF_TIME">Perché c’è un tempo finito/preciso (“last year”).</label>
@@ -393,8 +383,7 @@
       <label><input type="radio" name="B1" value="RESULT_NOW">Perché conta il risultato nel presente.</label>
     </div>
 
-    <!-- B2 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="LIFE_EXP"
+    <div class="q" data-id="B2" data-type="mc" data-points="1" data-correct="LIFE_EXP"
          data-explain="Present Perfect spesso per esperienze (senza dire quando).">
       <div class="qtitle">B2) Perché in A2 si usa Present Perfect?</div>
       <div class="prompt">I have visited London.</div>
@@ -403,28 +392,25 @@
       <label><input type="radio" name="B2" value="AGO">Perché c’è “ago”.</label>
     </div>
 
-    <!-- B3 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="RESULT_NOW"
+    <div class="q" data-id="B3" data-type="mc" data-points="1" data-correct="RESULT_NOW"
          data-explain="Present Perfect per risultato/effetto nel presente.">
       <div class="qtitle">B3) Perché in A3 si usa Present Perfect?</div>
       <div class="prompt">I have lost my keys. I can’t open the door.</div>
-      <label><input type="radio" name="B3" value="RESULT_NOW">Perché l’effetto è nel presente (ora non posso aprire).</label>
+      <label><input type="radio" name="B3" value="RESULT_NOW">Perché l’effetto è nel presente.</label>
       <label><input type="radio" name="B3" value="DEF_TIME">Perché c’è un tempo finito/preciso.</label>
       <label><input type="radio" name="B3" value="SINCE">Perché c’è “since”.</label>
     </div>
 
-    <!-- B4 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="AGO"
+    <div class="q" data-id="B4" data-type="mc" data-points="1" data-correct="AGO"
          data-explain="“ago” indica un tempo finito nel passato → Simple Past.">
       <div class="qtitle">B4) Perché in A4 si usa Simple Past?</div>
       <div class="prompt">They arrived two hours ago.</div>
-      <label><input type="radio" name="B4" value="AGO">Perché c’è “ago” (tempo finito nel passato).</label>
+      <label><input type="radio" name="B4" value="AGO">Perché c’è “ago”.</label>
       <label><input type="radio" name="B4" value="LIFE_EXP">Perché è un’esperienza di vita.</label>
-      <label><input type="radio" name="B4" value="UNFINISHED">Perché il tempo non è finito (this week).</label>
+      <label><input type="radio" name="B4" value="UNFINISHED">Perché il tempo non è finito.</label>
     </div>
 
-    <!-- B5 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="UNFINISHED"
+    <div class="q" data-id="B5" data-type="mc" data-points="1" data-correct="UNFINISHED"
          data-explain="This week/today può essere un periodo non finito → spesso Present Perfect.">
       <div class="qtitle">B5) Perché in A5 si usa Present Perfect?</div>
       <div class="prompt">We have watched three films this week.</div>
@@ -433,29 +419,26 @@
       <label><input type="radio" name="B5" value="AGO">Perché c’è “ago”.</label>
     </div>
 
-    <!-- B6 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="DURATION"
-         data-explain="For + durata (e situazione che continua) → spesso Present Perfect.">
+    <div class="q" data-id="B6" data-type="mc" data-points="1" data-correct="DURATION"
+         data-explain="For + durata (spesso continua fino ad ora) → Present Perfect.">
       <div class="qtitle">B6) Perché in A6 si usa Present Perfect?</div>
       <div class="prompt">I have lived here for three years.</div>
-      <label><input type="radio" name="B6" value="DURATION">Perché “for” indica durata (e spesso continua fino ad ora).</label>
+      <label><input type="radio" name="B6" value="DURATION">Perché “for” indica durata.</label>
       <label><input type="radio" name="B6" value="DEF_TIME">Perché c’è un tempo finito/preciso.</label>
       <label><input type="radio" name="B6" value="EVER">Perché c’è “ever”.</label>
     </div>
 
-    <!-- B7 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="GONE_NOT_HERE"
+    <div class="q" data-id="B7" data-type="mc" data-points="1" data-correct="GONE_NOT_HERE"
          data-explain="Have gone = è andato ed è ancora lì (non è qui).">
       <div class="qtitle">B7) Perché in A7 la risposta è “gone”?</div>
       <div class="prompt">Anna isn’t here. She has gone to the supermarket.</div>
-      <label><input type="radio" name="B7" value="GONE_NOT_HERE">Perché non è qui: è andata ed è ancora lì.</label>
-      <label><input type="radio" name="B7" value="BEEN_BACK">Perché è tornata a casa.</label>
+      <label><input type="radio" name="B7" value="GONE_NOT_HERE">Perché non è qui: è ancora lì.</label>
+      <label><input type="radio" name="B7" value="BEEN_BACK">Perché è tornata.</label>
       <label><input type="radio" name="B7" value="DEF_TIME">Perché c’è un tempo finito.</label>
     </div>
 
-    <!-- B8 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="BEEN_BACK"
-         data-explain="Have been = sono stato e sono tornato (è back home).">
+    <div class="q" data-id="B8" data-type="mc" data-points="1" data-correct="BEEN_BACK"
+         data-explain="Have been = andato e tornato (è back home).">
       <div class="qtitle">B8) Perché in A8 la risposta è “been”?</div>
       <div class="prompt">Marco is back home. He has been to Milan.</div>
       <label><input type="radio" name="B8" value="BEEN_BACK">Perché è tornato: been = andato e tornato.</label>
@@ -463,84 +446,51 @@
       <label><input type="radio" name="B8" value="EVER">Perché è una domanda con ever.</label>
     </div>
 
-    <!-- B9 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="EVER_Q"
-         data-explain="Ever si usa spesso nelle domande su esperienze di vita.">
+    <div class="q" data-id="B9" data-type="mc" data-points="1" data-correct="EVER_Q"
+         data-explain="Ever si usa spesso nelle domande su esperienze.">
       <div class="qtitle">B9) Perché in A9 si usa “ever”?</div>
       <div class="prompt">Have you ever eaten sushi?</div>
-      <label><input type="radio" name="B9" value="EVER_Q">Perché è una domanda “Hai mai…?” (esperienza di vita).</label>
+      <label><input type="radio" name="B9" value="EVER_Q">Perché è una domanda “Hai mai…?”.</label>
       <label><input type="radio" name="B9" value="NEVER_NEG">Perché è una frase negativa.</label>
       <label><input type="radio" name="B9" value="DEF_TIME">Perché c’è un tempo finito.</label>
     </div>
 
-    <!-- B10 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="NEVER_NEG"
-         data-explain="Never significa “mai” e di solito non vuole “not”.">
+    <div class="q" data-id="B10" data-type="mc" data-points="1" data-correct="NEVER_NEG"
+         data-explain="Never = mai, in frase affermativa (senza not).">
       <div class="qtitle">B10) Perché in A10 si usa “never”?</div>
       <div class="prompt">I have never seen snow.</div>
-      <label><input type="radio" name="B10" value="NEVER_NEG">Perché “never” = mai (frase negativa senza “not”).</label>
+      <label><input type="radio" name="B10" value="NEVER_NEG">Perché “never” = mai (senza “not”).</label>
       <label><input type="radio" name="B10" value="EVER_Q">Perché è una domanda.</label>
       <label><input type="radio" name="B10" value="AGO">Perché c’è “ago”.</label>
     </div>
 
-    <!-- B11 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="DEF_TIME"
-         data-explain="Yesterday = tempo finito → Simple Past.">
+    <div class="q" data-id="B11" data-type="mc" data-points="1" data-correct="DEF_TIME"
+         data-explain="Yesterday è tempo finito → Simple Past.">
       <div class="qtitle">B11) Perché in A11 si usa Simple Past?</div>
       <div class="prompt">She finished her homework yesterday.</div>
-      <label><input type="radio" name="B11" value="DEF_TIME">Perché “yesterday” è un tempo finito/preciso.</label>
+      <label><input type="radio" name="B11" value="DEF_TIME">Perché “yesterday” è tempo finito/preciso.</label>
       <label><input type="radio" name="B11" value="RESULT_NOW">Perché conta il risultato nel presente.</label>
       <label><input type="radio" name="B11" value="UNFINISHED">Perché il tempo non è finito.</label>
     </div>
 
-    <!-- B12 -->
-    <div class="q" data-type="mc" data-points="1" data-correct="DEF_TIME"
+    <div class="q" data-id="B12" data-type="mc" data-points="1" data-correct="DEF_TIME"
          data-explain="In 2021 è un momento preciso → Simple Past.">
       <div class="qtitle">B12) Perché in A12 si usa Simple Past?</div>
       <div class="prompt">I met my best friend in 2021.</div>
-      <label><input type="radio" name="B12" value="DEF_TIME">Perché “in 2021” è un momento preciso nel passato.</label>
+      <label><input type="radio" name="B12" value="DEF_TIME">Perché “in 2021” è un momento preciso.</label>
       <label><input type="radio" name="B12" value="LIFE_EXP">Perché non dico quando.</label>
       <label><input type="radio" name="B12" value="DURATION">Perché c’è “for”.</label>
     </div>
   </section>
 
-  <!-- SOLUZIONI -->
-  <section class="card" id="solutions">
-    <h2>Soluzioni (visibili) <span class="pill">Reference</span></h2>
-    <p class="hint">Non leggerle subito 😄 Prima fai i quiz, poi correggi.</p>
-
-    <details open>
-      <summary>Mostra/Nascondi soluzioni</summary>
-      <div class="sol">
-QUIZ A — Tempo
-A1 SP
-A2 PP
-A3 PP
-A4 SP
-A5 PP
-A6 PP
-A7 GONE
-A8 BEEN
-A9 EVER
-A10 NEVER
-A11 SP
-A12 SP
-
-QUIZ B — Perché
-B1 DEF_TIME
-B2 LIFE_EXP
-B3 RESULT_NOW
-B4 AGO
-B5 UNFINISHED
-B6 DURATION
-B7 GONE_NOT_HERE
-B8 BEEN_BACK
-B9 EVER_Q
-B10 NEVER_NEG
-B11 DEF_TIME
-B12 DEF_TIME
-      </div>
-    </details>
+  <!-- RECAP ERRORI -->
+  <section class="card" id="card-recap">
+    <h2>Recap errori da ripassare <span class="pill">si aggiorna da solo</span></h2>
+    <p class="hint">Qui compaiono solo le domande sbagliate, con la spiegazione (così ripassi più veloce).</p>
+    <ul class="recapList" id="recapList"></ul>
+    <div class="feedback warn" id="recapEmpty" style="display:none">
+      Nessun errore al momento. Continua così 💪
+    </div>
   </section>
 
 </main>
@@ -553,14 +503,24 @@ B12 DEF_TIME
   const allQuestions = Array.from(document.querySelectorAll(".q"));
   const scoreEl = document.getElementById("score");
   const totalEl = document.getElementById("total");
-  const triesEl = document.getElementById("tries");
-  const checkAllBtn = document.getElementById("checkAllBtn");
+  const answeredEl = document.getElementById("answered");
+  const qcountEl = document.getElementById("qcount");
   const resetBtn = document.getElementById("resetBtn");
+  const checkAllBtn = document.getElementById("checkAllBtn");
+  const recapList = document.getElementById("recapList");
+  const recapEmpty = document.getElementById("recapEmpty");
 
   const totalPoints = allQuestions.reduce((acc, q) => acc + Number(q.dataset.points || 0), 0);
   totalEl.textContent = totalPoints;
+  qcountEl.textContent = allQuestions.length;
 
-  let tries = 0;
+  // Stato: per ogni domanda: { answered, earned, picked, ok, correct, explain }
+  const state = {};
+  for(const q of allQuestions){
+    const id = q.dataset.id || Math.random().toString(16).slice(2);
+    q.dataset.id = id;
+    state[id] = { answered:false, earned:0, picked:null, ok:null, correct:q.dataset.correct, explain:q.dataset.explain, points:Number(q.dataset.points||0) };
+  }
 
   function setFeedback(q, kind, html){
     let fb = q.querySelector(".feedback.dynamic");
@@ -574,22 +534,19 @@ B12 DEF_TIME
     fb.innerHTML = html;
   }
 
-  function clearDynamicFeedback(){
-    document.querySelectorAll(".feedback.dynamic").forEach(el => el.remove());
-  }
-
-  function checkQuestion(q){
+  function checkQuestion(q, showWarningsIfEmpty=false){
+    const id = q.dataset.id;
     const points = Number(q.dataset.points || 0);
-    const type = q.dataset.type;
-
-    if(type !== "mc") return { earned:0, max:points, answered:false };
 
     const radios = Array.from(q.querySelectorAll('input[type="radio"]'));
     const picked = radios.find(r => r.checked)?.value;
 
     if(!picked){
-      setFeedback(q, "warn", "⏳ Scegli una risposta.");
-      return { earned:0, max:points, answered:false };
+      state[id] = { ...state[id], answered:false, earned:0, picked:null, ok:null };
+      if(showWarningsIfEmpty){
+        setFeedback(q, "warn", "⏳ Scegli una risposta.");
+      }
+      return;
     }
 
     const correct = q.dataset.correct;
@@ -600,58 +557,99 @@ B12 DEF_TIME
       (ok ? "✅ Giusto!" : `❌ Sbagliato. Risposta corretta: <b>${correct}</b>.`) + explain
     );
 
-    return { earned: ok ? points : 0, max: points, answered:true };
+    state[id] = {
+      ...state[id],
+      answered:true,
+      earned: ok ? points : 0,
+      picked,
+      ok,
+      correct,
+      explain: q.dataset.explain || "",
+      points
+    };
   }
 
-  function checkAll(){
-    tries += 1;
-    triesEl.textContent = tries;
-    clearDynamicFeedback();
-
+  function updateHeaderScore(){
     let earned = 0;
-    let answeredCount = 0;
+    let answered = 0;
 
-    for(const q of allQuestions){
-      const res = checkQuestion(q);
-      earned += res.earned;
-      if(res.answered) answeredCount += 1;
+    for(const id in state){
+      earned += state[id].earned || 0;
+      if(state[id].answered) answered += 1;
     }
 
     scoreEl.textContent = earned;
+    answeredEl.textContent = answered;
+  }
 
-    const pct = Math.round((earned / totalPoints) * 100);
-    const msg =
-      pct === 100 ? "Perfetto 💯" :
-      pct >= 85 ? "Ottimo! Rifai solo gli errori." :
-      pct >= 70 ? "Buono. Rivedi le spiegazioni e riprova." :
-      "Serve un altro giro: leggi le slide e ripeti le regole a voce.";
+  function updateRecap(){
+    recapList.innerHTML = "";
 
-    let summary = document.getElementById("summaryBox");
-    if(!summary){
-      summary = document.createElement("div");
-      summary.id = "summaryBox";
-      summary.className = "feedback";
-      summary.style.marginTop = "12px";
-      document.querySelector(".title").appendChild(summary);
+    const wrong = Object.entries(state)
+      .filter(([_, s]) => s.answered && s.ok === false)
+      .map(([id, s]) => ({ id, ...s }));
+
+    if(wrong.length === 0){
+      recapEmpty.style.display = "block";
+      return;
     }
-    summary.className = "feedback " + (pct>=85 ? "ok" : pct>=70 ? "warn" : "bad");
-    summary.innerHTML = `<b>Risultato:</b> ${earned}/${totalPoints} (${pct}%). ${msg}<div class="small">Domande risposte: ${answeredCount}/${allQuestions.length}</div>`;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    recapEmpty.style.display = "none";
+
+    for(const w of wrong){
+      const li = document.createElement("li");
+      li.className = "recapItem";
+
+      li.innerHTML = `
+        <div><b>${w.id}</b> — Hai scelto: <b>${w.picked}</b> | Corretto: <b>${w.correct}</b></div>
+        <div class="small">Spiegazione: ${w.explain || "—"}</div>
+      `;
+      recapList.appendChild(li);
+    }
+  }
+
+  function recalcAll(){
+    // ricontrolla tutto (utile se uno cambia più risposte)
+    for(const q of allQuestions){
+      checkQuestion(q, true);
+    }
+    updateHeaderScore();
+    updateRecap();
   }
 
   function resetAll(){
-    tries = 0;
-    triesEl.textContent = tries;
-    scoreEl.textContent = "0";
-    clearDynamicFeedback();
+    // reset radios
     document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-    const summary = document.getElementById("summaryBox");
-    if(summary) summary.remove();
+    // remove feedback
+    document.querySelectorAll(".feedback.dynamic").forEach(el => el.remove());
+    // reset state
+    for(const id in state){
+      state[id].answered = false;
+      state[id].earned = 0;
+      state[id].picked = null;
+      state[id].ok = null;
+    }
+    updateHeaderScore();
+    updateRecap();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  checkAllBtn.addEventListener("click", checkAll);
+  // IMMEDIATE CHECK: on change of any radio, check that single question + update score + recap
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      const q = e.target.closest(".q");
+      checkQuestion(q, true);     // immediate feedback + explanation
+      updateHeaderScore();        // immediate score update
+      updateRecap();              // immediate recap update
+    });
+  });
+
+  // Buttons
   resetBtn.addEventListener("click", resetAll);
+  checkAllBtn.addEventListener("click", recalcAll);
+
+  // Init recap empty
+  updateHeaderScore();
+  updateRecap();
 </script>
 
 </body>
